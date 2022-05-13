@@ -1,10 +1,10 @@
-<div class="sticky-top">
+<div class="fullscreen-hidden sticky-top">
     <header class="navbar navbar-expand-md navbar-light sticky-top d-print-none">
         <div class="container-xl">
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-menu">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <h1 class="navbar-brand navbar-brand-autodark d-none-navbar-horizontal pe-0 pe-md-3">
+            <h1 class="navbar-brand d-none-navbar-horizontal pe-0 pe-md-3">
                 <a href="{{ route('home') }}">
                     <img src="{{ config('app_settings.values.logo_url') }}"
                          alt="{{ config('app_settings.values.app_name') }}" class="navbar-brand-image" width="110"
@@ -13,24 +13,43 @@
             </h1>
             <div class="navbar-nav flex-row order-md-last">
                 <div class="nav-item d-none d-md-flex me-3">
-                    <div class="btn-list">
-                        <a href="#" class="btn" title="Posalji Poruku">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
-                                 viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
-                                 stroke-linecap="round" stroke-linejoin="round">
+<!--                    <div class="btn-list">
+                        <a href="#" class="btn" title="Prebaci u mod Prezentacije; Prikaz preko celog ekrana">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrows-maximize" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                 <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                <line x1="12" y1="5" x2="12" y2="19"></line>
-                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                                <polyline points="16 4 20 4 20 8"></polyline>
+                                <line x1="14" y1="10" x2="20" y2="4"></line>
+                                <polyline points="8 20 4 20 4 16"></polyline>
+                                <line x1="4" y1="20" x2="10" y2="14"></line>
+                                <polyline points="16 20 20 20 20 16"></polyline>
+                                <line x1="14" y1="14" x2="20" y2="20"></line>
+                                <polyline points="8 4 4 4 4 8"></polyline>
+                                <line x1="4" y1="4" x2="10" y2="10"></line>
                             </svg>
-                            Kontakt
+                            Prosiri Prikaz
                         </a>
-                    </div>
+                    </div>-->
                 </div>
                 <div class="d-none d-md-flex">
+                    <a href="#" class="nav-link px-0" title="Prebaci u Tamnu Temu" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Prebaci u Tamnu Temu">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                            <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z"></path>
+                        </svg>
+                    </a>
+                    <a href="#" class="nav-link px-0" title="Prebaci u Svetlu Temu" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Prebaci u Svetlu Temu">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                             <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                            <circle cx="12" cy="12" r="4"></circle>
+                            <path d="M3 12h1m8 -9v1m8 8h1m-9 8v1m-6.4 -15.4l.7 .7m12.1 -.7l-.7 .7m0 11.4l.7 .7m-12.1 -.7l-.7 .7"></path>
+                        </svg>
+                    </a>
+                </div>
+<!--                <div class="d-none d-md-flex">
                     <div class="nav-item dropdown d-none d-md-flex me-3">
                         <a href="#" class="nav-link px-0" data-bs-toggle="dropdown" tabindex="-1"
                            aria-label="Show notifications">
-                            <!-- Download SVG icon from http://tabler-icons.io/i/bell -->
+                            &lt;!&ndash; Download SVG icon from http://tabler-icons.io/i/bell &ndash;&gt;
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
                                  viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
                                  stroke-linecap="round" stroke-linejoin="round">
@@ -46,7 +65,7 @@
                                     <h3 class="card-title">Poslednje Informacije</h3>
                                 </div>
                                 <div class="list-group list-group-flush list-group-hoverable">
-                                    <!--                                        <div class="list-group-item">
+                                    &lt;!&ndash;                                        <div class="list-group-item">
                                                                                 <div class="row align-items-center">
                                                                                     <div class="col-auto"><span class="status-dot status-dot-animated bg-red d-block"></span></div>
                                                                                     <div class="col text-truncate">
@@ -62,12 +81,12 @@
                                                                                         </a>
                                                                                     </div>
                                                                                 </div>
-                                                                            </div>-->
+                                                                            </div>&ndash;&gt;
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>-->
                 <div class="nav-item dropdown">
                     @if(Auth::user())
                         <a href="#" class="nav-link d-flex lh-1 text-reset p-0" data-bs-toggle="dropdown"
@@ -84,16 +103,19 @@
                                 <div class="mt-1 small text-muted">{{ Auth::user()->isAdmin ? 'Admin' : 'Korisnik' }}</div>
                             </div>
                         </a>
-                    @endif
-                    <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                        <!--                            <a href="#" class="dropdown-item">Profile &amp; account</a>
-                                                    <div class="dropdown-divider"></div>-->
+                        <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow text-center">
 
-                        <form action="/logout" class="text-center" method="POST">
-                            @csrf
-                            <button class="btn-link">Odjavi se</button>
-                        </form>
-                    </div>
+                            <a href="{{ route('user.edit', ['user' => Auth::user()]) }}" class="btn-link p-1 d-block" title="Ovde možete izmeniti svoj profil i nalog">Moj Profil</a>
+
+                            <div class="dropdown-divider"></div>
+
+
+                            <form action="/logout" class="text-center" method="POST">
+                                @csrf
+                                <button class="btn-link">Odjavi se</button>
+                            </form>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
@@ -103,67 +125,7 @@
             <div class="collapse navbar-collapse" id="navbar-menu">
                 <div class="navbar navbar-light">
                     <div class="container-xl">
-                        <ul class="navbar-nav">
-                            <li class="nav-item">
-                                <a href="{{ route('home') }}" class="nav-link">
-                                        <span class="nav-link-icon d-md-none d-lg-inline-block"><!-- Download SVG icon from http://tabler-icons.io/i/home -->
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
-                                                 viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
-                                                 stroke-linecap="round" stroke-linejoin="round"><path stroke="none"
-                                                                                                      d="M0 0h24v24H0z"
-                                                                                                      fill="none"></path><polyline
-                                                        points="5 12 3 12 12 3 21 12 19 12"></polyline><path
-                                                        d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path><path
-                                                        d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path></svg>
-                                        </span>
-                                    <span class="nav-link-title">
-                                            Home
-                                        </span>
-                                </a>
-                            </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown"
-                                   data-bs-auto-close="outside" role="button" aria-expanded="false">
-                                        <span class="nav-link-icon d-md-none d-lg-inline-block"><!-- Download SVG icon from http://tabler-icons.io/i/package -->
-                                            <svg xmlns="http://www.w3.org/2000/svg"
-                                                 class="icon icon-tabler icon-tabler-settings" width="24" height="24"
-                                                 viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
-                                                 stroke-linecap="round" stroke-linejoin="round">
-                                               <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                               <path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z"></path>
-                                               <circle cx="12" cy="12" r="3"></circle>
-                                            </svg>
-                                        </span>
-                                    <span class="nav-link-title">
-                                            Podešavanja
-                                        </span>
-                                </a>
-                                <div class="dropdown-menu">
-                                    <div class="dropdown-menu-columns">
-                                        <div class="dropdown-menu-column">
-                                            <a class="dropdown-item" href="{{ route('excavation-field.index') }}">
-                                                Kopovi
-                                            </a>
-                                            <a class="dropdown-item" href="{{ route('rodent.index') }}">
-                                                Bageri
-                                            </a>
-                                            @foreach(config('app_settings.field_config') as $section => $config)
-                                                <a class="dropdown-item{{ request()->getUri() == route('admin.configuration.edit', ['section' => $section]) ? ' active' : '' }}"
-                                                   href="{{ route('admin.configuration.edit', ['section' => $section]) }}">
-                                                    {{ trans("app_settings.$section.section:name") }}
-                                                </a>
-                                            @endforeach
-                                            @if(count(config('app_settings.field_config')) > 1)
-                                                <a class="dropdown-item{{ request()->route()->getName() == 'admin.configuration.index' ? ' active' : '' }}"
-                                                   href="{{ route('admin.configuration.index') }}">
-                                                    Sva Podešavanja
-                                                </a>
-                                            @endif
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
+                        @include('partials.top_menu')
                     </div>
                 </div>
             </div>

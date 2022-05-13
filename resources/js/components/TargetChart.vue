@@ -65,6 +65,9 @@ export default {
                 },
                 title: {
                     text: this.graph_title,
+                    style: {
+                        color:  'rgba(255, 255, 255, 0.7)'
+                    },
                 }
             },
         }

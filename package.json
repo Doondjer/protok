@@ -30,6 +30,7 @@
         "vue": "^2.6.14",
         "vue-apexcharts": "^1.6.2",
         "vue-chartjs": "^4.0.7",
+        "vue-fullscreen": "^2.6.1",
         "vue-sweetalert2": "^5.0.2",
         "vuejs-datepicker": "^1.6.2"
     }

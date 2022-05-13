@@ -51,9 +51,8 @@ class FlowRepository
      */
     public function getCurrentFlowData()
     {
-
         return Flow::select(DB::raw('ROUND(avg(ValueVrednost) * 3600,1) as ValueVrednost, StationId, DatumVreme'))
-            ->whereRaw("CAST(DatumVreme as datetime) >= '" . Carbon::now()->subMinutes(5) . "'")
+            ->whereRaw("CAST(DatumVreme as datetime) >= '" . Carbon::now()->subMinutes(15) . "'")
             ->groupBy('StationId', 'DatumVreme')
             ->orderBy(DB::raw('CAST( DatumVreme AS Date )'),'desc')
             ->pluck('ValueVrednost', 'StationId')->toArray();

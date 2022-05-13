@@ -12,13 +12,22 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
 Route::middleware('auth')->group(function(){
     Route::get('/', [ \App\Http\Controllers\FLowsController::class, 'index'])->name('home');
+    Route::resource('/user', '\App\Http\Controllers\UsersController')->only(['edit', 'update']);
+
 });
+
 Route::middleware('admin')->prefix('admin')->group(function() {
 
     Route::resource('rodent', '\App\Http\Controllers\RodentsController')->except(['show']);
     Route::resource('excavation-field', '\App\Http\Controllers\ExcavationFieldsController')->except(['show']);
+    Route::resource('/user', '\App\Http\Controllers\UsersController')->only(['index' ,'create', 'store', 'destroy']);
+    Route::patch('/user/{user}/undelete', [\App\Http\Controllers\UsersController::class, 'undelete'])->name('user.undelete')->withTrashed();
+
+    Route::get('phpinfo', [\App\Http\Controllers\AdminsController::class, 'phpinfo'])->name('phpinfo');
+    Route::get('export/{flow}', [\App\Http\Controllers\AdminsController::class, 'export'])->name('export');
 
     Route::get('/konfiguracija', [\App\Http\Controllers\ConfigurationController::class, 'index'])->name('admin.configuration.index');
     Route::get('/konfiguracija/{section}', [\App\Http\Controllers\ConfigurationController::class, 'edit'])->name('admin.configuration.edit');

@@ -28,12 +28,11 @@ class ChartsController extends Controller
     {
         $series = $this->flowRepository->getSevenDayFlowBarData($stationId);
 
-       /* $days = (int) request('days', config('app_settings.values.multiday_default_days')) < config('app_settings.values.multiday_max_days')
+        $days = (int) request('days', config('app_settings.values.multiday_default_days')) < config('app_settings.values.multiday_max_days')
         && (int)request('days', config('app_settings.values.multiday_default_days')) > 0
             ? (int) request('days', config('app_settings.values.multiday_default_days')) : config('app_settings.values.multiday_default_days');
-dump(request('days'));
-dd($days);*/
-        $data = $this->flowRepository->getMultidayFlowSeriesData($stationId, (int) request('days'));
+
+        $data = $this->flowRepository->getMultidayFlowSeriesData($stationId, $days);
 
         return response()->json([
             'data' => $data,

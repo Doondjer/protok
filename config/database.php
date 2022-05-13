@@ -79,10 +79,10 @@ return [
             'sslmode' => 'prefer',
         ],
 
-        'sqlsrv' => [
+    /*    'sqlsrv1' => [
             'driver' => 'sqlsrv',
             'url' => env('DATABASE_URL'),
-            'host' => '10.64.136.39',
+            'host' => '10.64.137.243',
             'port' => '1433',
             'database' => 'BAGERPROTOK',
             'username' => '4bto',
@@ -92,36 +92,21 @@ return [
             'prefix_indexes' => true,
             // 'encrypt' => env('DB_ENCRYPT', 'yes'),
             // 'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
-        ],
-        'sqlsrv_old' => [
+        ],*/
+        'sqlsrv' => [
             'driver' => 'sqlsrv',
             'url' => env('DATABASE_URL'),
-            'host' => env('DB_HOST', 'localhost'),
-            'port' => env('DB_PORT', '1433'),
-            'database' => env('DB_DATABASE', 'forge'),
-            'username' => env('DB_USERNAME', 'forge'),
-            'password' => env('DB_PASSWORD', ''),
+            'host' => env('DB_REMOTE_HOST'),
+            'port' => env('DB_REMOTE_PORT'),
+            'database' => env('DB_REMOTE_DATABASE'),
+            'username' => env('DB_REMOTE_USERNAME'),
+            'password' => env('DB_REMOTE_PASSWORD'),
             'charset' => 'utf8',
             'prefix' => '',
             'prefix_indexes' => true,
             // 'encrypt' => env('DB_ENCRYPT', 'yes'),
             // 'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
-        ],
-        'sqlsrv1' => [
-            'driver' => 'sqlsrv',
-            'url' => env('DB_REMOTE_HOST'),
-            'host' => env('DB_REMOTE_HOST', 'localhost'),
-            'port' => env('DB_REMOTE_PORT', '1433'),
-            'database' => env('DB_REMOTE_DATABASE', 'forge'),
-            'username' => env('DB_REMOTE_USERNAME', 'forge'),
-            'password' => env('DB_REMOTE_PASSWORD', ''),
-            'charset' => 'utf8',
-            'prefix' => '',
-            'prefix_indexes' => true,
-            // 'encrypt' => env('DB_ENCRYPT', 'yes'),
-            // 'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
-        ],
-
+        ]
     ],
 
     /*

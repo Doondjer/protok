@@ -4,8 +4,57 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "60b9d2995ab6220b172a0b4125b0310a",
+    "content-hash": "485fa51ba0e7360b65366ebf2174d52f",
     "packages": [
+        {
+            "name": "aldas/modbus-tcp-client",
+            "version": "3.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/aldas/modbus-tcp-client.git",
+                "reference": "ac8661a693aed70d542a3c4d10cce08ea1ab88b5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/aldas/modbus-tcp-client/zipball/ac8661a693aed70d542a3c4d10cce08ea1ab88b5",
+                "reference": "ac8661a693aed70d542a3c4d10cce08ea1ab88b5",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "php": "^8.0"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^1.5",
+                "phpunit/phpunit": "^9.0",
+                "psr/log": "^1.0",
+                "react/child-process": "^0.6",
+                "react/datagram": "^1.8",
+                "react/socket": "^1.10"
+            },
+            "suggest": {
+                "psr/log": "Required for using the Log middleware with BinaryStreamConnection"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "ModbusTcpClient\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "description": "Modbus TCP protocol client library",
+            "keywords": [
+                "modbus"
+            ],
+            "support": {
+                "issues": "https://github.com/aldas/modbus-tcp-client/issues",
+                "source": "https://github.com/aldas/modbus-tcp-client/tree/3.0.0"
+            },
+            "time": "2022-04-11T18:01:06+00:00"
+        },
         {
             "name": "bacon/bacon-qr-code",
             "version": "2.0.7",

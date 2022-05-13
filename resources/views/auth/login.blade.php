@@ -37,7 +37,7 @@
 
 
                 <div class="text-center mb-4">
-                    <img class="mb-4" src="/images/kolubara.png" alt="" width="72" height="72">
+                    <img class="mb-4" src="{{ config('app_settings.values.logo_url') }}" alt="{{ config('app_settings.values.app_name') }}" width="72" height="72">
                     <h1 class="h3 mb-3 font-weight-normal">Merenje Protoka</h1>
                     <p>Ova aplikacija je razvijena od strane 4Bto Sistema, i bla bla bla nesto nakenjamo</p>
                 </div>
@@ -68,7 +68,7 @@
                     </div>
             </form>
             <div class="text-center text-muted mt-3">
-                Još nemaš nalog? <a href="#" tabindex="-1">Javi se Slaji</a>
+                Još nemaš nalog? <a href="tel:0117851801" tabindex="-1">Javi se na 1801</a>
             </div>
         </div>
     </div>

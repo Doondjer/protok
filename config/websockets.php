@@ -59,7 +59,7 @@ return [
     /*
      * This path will be used to register the necessary routes for the package.
      */
-    'path' => 'laravel-websockets',
+    'path' => 'admin/websockets',
 
     /*
      * Dashboard Routes Middleware
@@ -70,7 +70,8 @@ return [
      */
     'middleware' => [
         'web',
-        Authorize::class,
+        'admin',
+        //Authorize::class,
     ],
 
     'statistics' => [

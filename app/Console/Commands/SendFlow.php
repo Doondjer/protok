@@ -37,16 +37,16 @@ class SendFlow extends Command
      */
     public function handle()
     {
-        $resources = $this->flowRepository->getPanelData();
+        $panelFlows = $this->flowRepository->getPanelData();
 
         $graphData = $this->flowRepository->getPanelGraphData();
 
-        $currentFlow = $this->flowRepository->getCurrentFlowData();
+        $currentFlows = $this->flowRepository->getCurrentFlowData();
 
         NewFlow::dispatch(compact(
-                'resources',
+                'panelFlows',
                 'graphData',
-                'currentFlow',
+                'currentFlows',
             )
         );
     }

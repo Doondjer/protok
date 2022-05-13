@@ -140,8 +140,8 @@ export default {
             this.flows = data.data.data;
         },
         exportTable() {
-            alert('export to do');
-        }
+            window.open(apiService.exportExcel(this.rodent.id));
+        },
     }
 }
 </script>

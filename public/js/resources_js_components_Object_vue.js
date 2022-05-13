@@ -112,10 +112,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  props: ['total_flow', 'current_flow', 'resource', 'graph_data', 'update_chart'],
+  props: ['panel_flows', 'current_flow', 'resource', 'graph_data', 'update_chart'],
   data: function data() {
     return {
       show_graph: false
@@ -123,6 +122,19 @@ __webpack_require__.r(__webpack_exports__);
   },
   components: {
     chart: _TargetChart__WEBPACK_IMPORTED_MODULE_0__["default"]
+  },
+  computed: {
+    totalFlow: function totalFlow() {
+      if (this.update_chart.length && this.update_chart.data.panel_flows[this.resource.id]) {
+        return this.update_chart.data.panel_flows[this.resource.id][0].total_flow;
+      }
+
+      if (this.panel_flows[this.resource.id]) {
+        return this.panel_flows[this.resource.id][0].total_flow;
+      }
+
+      return 0;
+    }
   }
 });
 
@@ -203,7 +215,10 @@ __webpack_require__.r(__webpack_exports__);
           }
         },
         title: {
-          text: this.graph_title
+          text: this.graph_title,
+          style: {
+            color: 'rgba(255, 255, 255, 0.7)'
+          }
         }
       }
     };
@@ -595,12 +610,14 @@ var render = function () {
                             ]
                           ),
                           _vm._v(
-                            "\n                                        Teroijski Kapacitet: "
+                            "\n                                        Teorijski Kapacitet: "
                           ),
                           _c("strong", {
                             domProps: {
                               textContent: _vm._s(
-                                _vm.resource.max_capacity + " m3"
+                                (_vm.resource.max_capacity
+                                  ? _vm.resource.max_capacity
+                                  : "---") + " m3"
                               ),
                             },
                           }),
@@ -675,12 +692,10 @@ var render = function () {
                 "a",
                 {
                   staticClass: "btn btn-outline-dark w-100",
-                  attrs: {
-                    href: "#",
-                    download: "tabler-icon-device-analytics.svg",
-                  },
+                  attrs: { href: "#" },
                   on: {
                     click: function ($event) {
+                      $event.preventDefault()
                       return _vm.$emit("show_graph", {
                         station: _vm.resource.id,
                       })
@@ -706,12 +721,6 @@ var render = function () {
                       },
                     },
                     [
-                      _c("desc", [
-                        _vm._v(
-                          "Download more icon variants from https://tabler-icons.io/i/device-analytics"
-                        ),
-                      ]),
-                      _vm._v(" "),
                       _c("path", {
                         attrs: {
                           stroke: "none",
@@ -756,7 +765,7 @@ var render = function () {
           _c("chart", {
             attrs: {
               graph_data: _vm.graph_data,
-              graph_title: "Iskopano od 07:00 : " + _vm.total_flow + " m3",
+              graph_title: "Iskopano od 07:00 : " + _vm.totalFlow + " m3",
               update_chart: _vm.update_chart,
               resource_id: _vm.resource.id,
             },

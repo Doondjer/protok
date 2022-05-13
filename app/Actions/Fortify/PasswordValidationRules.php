@@ -2,6 +2,7 @@
 
 namespace App\Actions\Fortify;
 
+use App\Models\User;
 use Laravel\Fortify\Rules\Password;
 
 trait PasswordValidationRules
@@ -9,10 +10,14 @@ trait PasswordValidationRules
     /**
      * Get the validation rules used to validate passwords.
      *
+     * @param User|null $user
      * @return array
      */
-    protected function passwordRules()
+    protected function passwordRules(User $user = null)
     {
-        return ['required', 'string', new Password, 'confirmed'];
-    }
+        if($user) {
+            return [ 'string', 'nullable', new Password ];
+        }
+
+        return [ 'required', 'string', new Password ];    }
 }

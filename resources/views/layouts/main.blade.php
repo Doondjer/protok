@@ -1,11 +1,11 @@
 @extends('layouts.app')
 
 @section('main-body-content')
-<div class="page">
+<div class="page theme-dark" id="app">
 
     @include('partials.top_navigation_bar')
 
-    <div class="wrapper" id="app">
+    <div class="wrapper">
         <div class="page-wrapper">
             <div class="container-xl">
                 @include('partials.top_messages')

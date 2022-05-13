@@ -12,5 +12,8 @@ export default {
     async getStationTableData(payload) {
         await API.apiClient.get("sanctum/csrf-cookie");
         return API.apiClient.get(`/table/station`, { params: payload });
+    },
+    exportExcel(station) {
+        return `/admin/export/${station}`;
     }
 }

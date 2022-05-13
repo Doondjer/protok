@@ -31,7 +31,7 @@
                                     </div>
                                     <div class="mb-2" style="white-space: nowrap;">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-currency-ripple"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path> <circle cx="7" cy="12" r="3"></circle> <circle cx="17" cy="7" r="3"></circle> <circle cx="17" cy="17" r="3"></circle> <path d="M10 12h3l2 -2.5"></path> <path d="M15 14.5l-2 -2.5"></path></svg>
-                                        Teroijski Kapacitet: <strong v-text="`${resource.max_capacity} m3`"></strong>
+                                        Teorijski Kapacitet: <strong v-text="`${resource.max_capacity ? resource.max_capacity : '---' } m3`"></strong>
                                     </div>
                                     <div>
                                         <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file-description" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -49,9 +49,8 @@
                         </div>
                     </div>
                     <div class="ms-auto">
-                        <a class="btn btn-outline-dark w-100" @click="$emit('show_graph', {station: resource.id})" href="#" download="tabler-icon-device-analytics.svg">
+                        <a class="btn btn-outline-dark w-100" @click.prevent="$emit('show_graph', {station: resource.id})" href="#">
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-device-analytics" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                <desc>Download more icon variants from https://tabler-icons.io/i/device-analytics</desc>
                                 <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                                 <rect x="3" y="4" width="18" height="12" rx="1"></rect>
                                 <line x1="7" y1="20" x2="17" y2="20"></line>
@@ -65,7 +64,7 @@
                 </div>
                 <chart
                     :graph_data="graph_data"
-                    :graph_title="`Iskopano od 07:00 : ${total_flow} m3`"
+                    :graph_title="`Iskopano od 07:00 : ${totalFlow} m3`"
                     :update_chart="update_chart"
                     :resource_id="resource.id"
                 >
@@ -105,7 +104,7 @@
 import chart from './TargetChart';
 
 export default {
-    props: ['total_flow', 'current_flow', 'resource', 'graph_data', 'update_chart'],
+    props: ['panel_flows', 'current_flow', 'resource', 'graph_data', 'update_chart'],
     data() {
         return {
             show_graph: false
@@ -113,6 +112,17 @@ export default {
     },
     components: {
         chart,
+    },
+    computed:{
+        totalFlow() {
+            if(this.update_chart.length && this.update_chart.data.panel_flows[this.resource.id]){
+                return this.update_chart.data.panel_flows[this.resource.id][0].total_flow;
+            }
+            if(this.panel_flows[this.resource.id]){
+                return this.panel_flows[this.resource.id][0].total_flow;
+            }
+            return 0;
+        }
     },
 }
 </script>
