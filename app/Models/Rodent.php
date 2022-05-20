@@ -14,9 +14,6 @@ class Rodent extends Model
     protected $fillable = [
         'rodent_id',
         'name',
-        'max_capacity',
-        'image',
-        'in_short',
     ];
     /**
      * This attribute will be used instead of id to get listing model
@@ -43,5 +40,18 @@ class Rodent extends Model
     public function excavationField()
     {
         return $this->belongsTo(ExcavationField::class);
+    }
+
+    public function excavationFieldAttribute()
+    {
+        return $this->excavationField->slug;
+    }
+    /**
+     * Get the Rodent type associated with given Rodent
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function rodentType() {
+        return $this->belongsTo(RodentType::class);
     }
 }

@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Exports\FlowExport;
+use App\Http\Requests\ExportRequest;
 use App\Models\Flow;
+use App\Models\Rodent;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
@@ -20,8 +22,8 @@ class AdminsController extends Controller
         return view('admin.phpinfo.index');
     }
 
-    public function export(Flow $flow)
+    public function export(ExportRequest $request)
     {
-        return Excel::download(new FlowExport($flow, Carbon::yesterday()->subMonths(40), Carbon::now()), 'protok.xlsx');
+        return Excel::download(new FlowExport($request->validated()), 'protok.xlsx');
     }
 }

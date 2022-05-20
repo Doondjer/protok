@@ -165,5 +165,8 @@ return [
         'image'                 => 'slika',
         'in_short'              => 'ukratko',
         'excavation_field'      => 'radna jedinica',
+        'value'                 => 'vrednost',
+        'unit'                  => 'merna jedinica',
+        'rodent_type'           => 'tip bagera',
     ],
 ];

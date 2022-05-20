@@ -20,9 +20,15 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-         $schedule->command('start:flow')->everyTwoMinutes();
+      //   $schedule->command('read:current_flow')->everyMinute();
+         $schedule->command('send:panel')->everyFiveMinutes();
     }
 
+    protected function shortSchedule(\Spatie\ShortSchedule\ShortSchedule $shortSchedule)
+    {
+        // this command will run every 30 seconds
+        $shortSchedule->command('read:current_flow')->everySeconds(30);
+    }
     /**
      * Register the commands for the application.
      *

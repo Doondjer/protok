@@ -43,6 +43,9 @@
                     <a class="dropdown-item" href="{{ route('rodent.index') }}">
                         Bageri
                     </a>
+                    <a class="dropdown-item" href="{{ route('rodent-type.index') }}">
+                        Modeli Bagera
+                    </a>
                     @foreach(config('app_settings.field_config') as $section => $config)
                         <a class="dropdown-item{{ request()->getUri() == route('admin.configuration.edit', ['section' => $section]) ? ' active' : '' }}"
                            href="{{ route('admin.configuration.edit', ['section' => $section]) }}">

@@ -3,14 +3,16 @@
 namespace App\Exports;
 
 use App\Models\Flow;
+use App\Models\Rodent;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\FromQuery;
+use Maatwebsite\Excel\Concerns\WithHeadings;
 
-class FlowExport implements FromQuery
+class FlowExport implements FromQuery, WithHeadings
 {
     use Exportable;
 
@@ -20,13 +22,13 @@ class FlowExport implements FromQuery
 
     protected $end;
 
-    public function __construct(Flow $flow, Carbon $start, Carbon $end)
+    public function __construct(array $data)
     {
-        $this->flow = $flow;
+        $this->rodentId = $data['rodent_id'];
 
-        $this->start = $start;
+        $this->start = $data['date_start'];
 
-        $this->end = $end;
+        $this->end = $data['date_end'];
     }
 
     /**
@@ -34,10 +36,16 @@ class FlowExport implements FromQuery
      */
     public function query()
     {
+
         return Flow::query()->select(DB::raw('id, ROUND(ValueVrednost * 3600, 1) as flow, DatumVreme as date_time'))
-                    ->where('StationId', $this->flow->StationId)
-                    ->whereRaw("CAST(DatumVreme as datetime) >= '" . $this->start . "'")
-                    ->whereRaw("CAST(DatumVreme as datetime) < '" . $this->end . "'")
+                    ->where('StationId', $this->rodentId)
+                    ->whereRaw("CAST(DatumVreme as datetime) >= '" . Carbon::create($this->start) . "'")
+                    ->whereRaw("CAST(DatumVreme as datetime) < '" . Carbon::create($this->end) . "'")
                     ->orderBy('DatumVreme', 'desc');
+    }
+
+    public function headings(): array
+    {
+        return ["Id Protoka", "Protok [m3/h]", "Vreme"];
     }
 }

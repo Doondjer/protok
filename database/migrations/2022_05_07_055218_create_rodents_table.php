@@ -19,12 +19,11 @@ return new class extends Migration
             $table->unsignedInteger('rodent_id')->unique();
             $table->string('name');
             $table->unsignedBigInteger('excavation_field_id');
-            $table->float('max_capacity')->nullable();
-            $table->string('image')->nullable();
-            $table->text('in_short')->nullable();
+            $table->unsignedBigInteger('rodent_type_id');
             $table->timestamps();
 
             $table->foreign('excavation_field_id')->references('id')->on('excavation_fields')->onDelete('cascade');
+            $table->foreign('rodent_type_id')->references('id')->on('rodent_types')->onDelete('cascade');
         });
     }
 

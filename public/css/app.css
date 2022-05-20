@@ -65,4 +65,126 @@
 body.fullscreen .fullscreen-hidden {
     display: none!important;
 }
+body.fullscreen .page-body {
+    margin: 0!important;
+}
+body.fullscreen .panel-header {
+    margin-bottom: 1.25rem;
+}
+
+.theme-dark .apexcharts-menu {
+    background-color: #1e293b;
+}
+@media (max-height: 1024px){
+
+    body.fullscreen .panel-header {
+        display: none!important;
+    }
+}
+@media (max-height: 900px) {
+
+    body.fullscreen .panel-header {
+        display: none!important;
+    }
+}
+#core {
+    -webkit-animation-name: stretch;
+            animation-name: stretch;
+    -webkit-animation-duration: 1.5s;
+            animation-duration: 1.5s;
+    -webkit-animation-timing-function: ease-out;
+            animation-timing-function: ease-out;
+    -webkit-animation-delay: 0s;
+            animation-delay: 0s;
+    -webkit-animation-direction: alternate;
+            animation-direction: alternate;
+    -webkit-animation-iteration-count: infinite;
+            animation-iteration-count: infinite;
+    -webkit-animation-fill-mode: none;
+            animation-fill-mode: none;
+    -webkit-animation-play-state: running;
+            animation-play-state: running;
+}
+
+/*
+  is the same as:
+*/
+/*
+.core {
+    animation: strech 1.5s ease-in-out;
+    animation-iteration-count: infinite;
+}
+@keyframes stretch {
+    0% {
+        opacity: 0;
+        transform: scale(0);
+    }
+
+    30% {
+        opacity: 1;
+        transform: scale(1.2);
+    }
+
+    60% {
+        opacity: 1;
+        transform: scale(1.5);
+    }
+
+    100% {
+        opacity: 0;
+        transform: scale(1.5);
+    }
+}*/
+.core {
+    fill: #ff4f81;
+    -webkit-animation: wifi_pulse 1.5s ease-in-out;
+            animation: wifi_pulse 1.5s ease-in-out;
+    -webkit-animation-iteration-count: infinite;
+            animation-iteration-count: infinite;
+}
+
+@-webkit-keyframes wifi_pulse {
+    0% {
+        opacity: 0;
+        transform: scale(0);
+    }
+
+    30% {
+        opacity: 1;
+        transform: scale(1.2);
+    }
+
+    60% {
+        opacity: 1;
+        transform: scale(1.5);
+    }
+
+    100% {
+        opacity: 0;
+        transform: scale(1.5);
+    }
+}
+
+@keyframes wifi_pulse {
+    0% {
+        opacity: 0;
+        transform: scale(0);
+    }
+
+    30% {
+        opacity: 1;
+        transform: scale(1.2);
+    }
+
+    60% {
+        opacity: 1;
+        transform: scale(1.5);
+    }
+
+    100% {
+        opacity: 0;
+        transform: scale(1.5);
+    }
+}
+
 

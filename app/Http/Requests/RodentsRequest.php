@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class RodentsRequest extends FormRequest
 {
@@ -23,13 +24,17 @@ class RodentsRequest extends FormRequest
      */
     public function rules()
     {
+        $unique = Rule::unique('rodents');
+
+        if($rodent = $this->route('rodent')) {
+            $unique->ignore($rodent->id);
+        }
+
         return [
-            'rodent_id'         => 'required|numeric|integer|min:0',
-            'name'              => 'required|string|max:70',
-            'excavation_field'  => 'required|exists:excavation_fields,slug',
-            'max_capacity'      => 'nullable|numeric|min:0|max:300000',
-            'image'             => 'nullable|string|max:300',
-            'in_short'          => 'nullable|string|min:5|max:10000'
+            'rodent_id'             => ['required', $unique, 'numeric','integer','min:0'],
+            'name'                  => 'required|string|max:70',
+            'excavation_field_id'   => 'required|exists:excavation_fields,id',
+            'rodent_type_id'        => 'required|exists:rodent_types,id',
         ];
     }
 }

@@ -10,6 +10,7 @@ return [
         'flow_paginate_default' => 10,
         'multiday_max_days'     => 20,
         'multiday_default_days' => 7,
+        'max_rodents_scan_cycle' => 12 * 60,
     ],
     'field_config' => [
 
@@ -39,6 +40,11 @@ return [
             ],
             'flow_paginate_default' => [
                 'rules' => 'required|numeric|min:5|max:1000',
+                'type' => 'text',
+                'required' => true,
+            ],
+            'max_rodents_scan_cycle' => [
+                'rules' => 'required|numeric|min:5|max:10000',
                 'type' => 'text',
                 'required' => true,
             ],

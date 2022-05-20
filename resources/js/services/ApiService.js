@@ -13,7 +13,16 @@ export default {
         await API.apiClient.get("sanctum/csrf-cookie");
         return API.apiClient.get(`/table/station`, { params: payload });
     },
-    exportExcel(station) {
-        return `/admin/export/${station}`;
-    }
+    async exportExcel(payload) {
+        await API.apiClient.get("sanctum/csrf-cookie");
+        return API.apiClient.post(`/export`, payload, {responseType: 'arraybuffer'});
+    },
+    async submitAttribute(slug, payload) {
+        await API.apiClient.get("/sanctum/csrf-cookie");
+        return API.apiClient.post(`/rodent-type/${slug}/attribute`, payload);
+    },
+    async deleteAttribute(slug, id) {
+        await API.apiClient.get("/sanctum/csrf-cookie");
+        return API.apiClient.delete(`/rodent-type/${slug}/attribute/${id}`);
+    },
 }

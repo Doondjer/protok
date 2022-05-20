@@ -1,6 +1,6 @@
 <template>
-    <div >
-        <apexchart ref="chart" :options="chartOptions" :series="series"></apexchart>
+    <div>
+        <apexchart ref="chart" :options="chartOptions" :series="series" :height="barHeight"></apexchart>
     </div>
 </template>
 
@@ -9,18 +9,40 @@
 import apexchart from 'vue-apexcharts'
 
 export default {
-    props: ['graph_data', 'graph_title', 'update_chart','resource_id'],
+    props: ['update_chart','resource_id'],
     watch: {
         'update_chart.data.graphData': {
             handler:function(newVal) {
 
-                if (newVal && newVal[this.resource_id]) {
+
                     this.$refs.chart.updateOptions({series: [{
                             name: "Iskopano",
                             data: this.getSeries(newVal[this.resource_id])
-                        }]})
+                        }]
+                    })
+            },
+            deep:true    },
+        'update_chart.data.panelFlows': {
+            handler:function(newVal) {
+
+                let total = 0;
+
+                if (newVal && newVal[this.resource_id]){
+                    console.log(newVal[this.resource_id]);
+                    newVal[this.resource_id].map(flow =>{
+                        console.log(flow);
+                        total += flow.total_flow;
+                    })
                 }
 
+                this.$refs.chart.updateOptions({
+                    title: {
+                        text: `Iskopano od 07:00 : ${total} m3`,
+                        style: {
+                            color:  'rgba(255, 255, 255, 0.7)'
+                        },
+                    }
+                })
             },
             deep:true    },
 
@@ -38,16 +60,14 @@ export default {
                     y: 0
             }],
             chartOptions: {
-                chart: {
-                    type: 'bar',
-                 //   height: 100
-                },
+                colors : [ '#00a651' ],
+                chart: { type: 'bar' },
                 plotOptions: {
                     bar: {
                         horizontal: false,
                         borderRadius: 10,
                         columnWidth: '65%',
-                        endingShape: 'rounded'
+                        endingShape: 'rounded',
                     },
                 },
                 dataLabels: {
@@ -62,12 +82,6 @@ export default {
                             return val + " m3";
                         },
                     }
-                },
-                title: {
-                    text: this.graph_title,
-                    style: {
-                        color:  'rgba(255, 255, 255, 0.7)'
-                    },
                 }
             },
         }
@@ -76,9 +90,23 @@ export default {
         series() {
             return [{
                 name: "Iskopano",
-                data: this.getSeries(this.graph_data)
-            }];
-        }
+                data: this.getSeries()
+            }]
+        },
+        barHeight() {
+
+            if(screen.height < 864) {
+                return 'auto';
+            }
+
+            let i = 20;
+
+            if(screen.height >= 1050) {
+                i=30
+            }
+
+            return `${(screen.height / 5) - i}px`;
+        },
     },
     components: {
         apexchart
@@ -88,7 +116,7 @@ export default {
             let data = [];
 
             if(graph_data && graph_data !== 'undefined') {
-                let that = this;console.log(graph_data);
+                let that = this;
                 graph_data.map(function (value, key){
                     data.push({
                         x: that.defaultShifts[value.shift-1].x,

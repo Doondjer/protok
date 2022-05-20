@@ -1,55 +1,27 @@
 <template>
     <div class="col-sm-12 col-md-6 col-lg-4">
         <div class="card" :title="resource.name">
-            <div class="card-status-top" :class="current_flow ? 'bg-success' : 'bg-danger'"></div>
-            <div class="card-body px-0 pb-0">
+            <div class="card-status-top" :class="isComunication ? 'bg-success' : 'bg-danger'"></div>
+            <div class="pt-2">
                 <div class="d-flex px-3">
-                    <span class="status-indicator" :class="current_flow ? 'status-green status-indicator-animated' : 'status-red'">
+                    <span class="status-indicator" :class="isComunication ? 'status-green status-indicator-animated' : 'status-red'">
                         <span class="status-indicator-circle"></span>
                         <span class="status-indicator-circle"></span>
                         <span class="status-indicator-circle"></span>
                     </span>
-                    <h3 class="card-title ms-2 mt-2" v-text="resource.name"></h3>
-                    <div class="dropdown ms-2 mt-1">
-                        <span class="text-info " data-bs-toggle="dropdown" tabindex="-1" aria-label="Prikaži Detalje" aria-expanded="false">
-                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" width="27" height="27" preserveAspectRatio="xMidYMid meet" viewBox="0 0 1024 1024"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448s448-200.6 448-448S759.4 64 512 64zm0 708c-22.1 0-40-17.9-40-40s17.9-40 40-40s40 17.9 40 40s-17.9 40-40 40zm62.9-219.5a48.3 48.3 0 0 0-30.9 44.8V620c0 4.4-3.6 8-8 8h-48c-4.4 0-8-3.6-8-8v-21.5c0-23.1 6.7-45.9 19.9-64.9c12.9-18.6 30.9-32.8 52.1-40.9c34-13.1 56-41.6 56-72.7c0-44.1-43.1-80-96-80s-96 35.9-96 80v7.6c0 4.4-3.6 8-8 8h-48c-4.4 0-8-3.6-8-8V420c0-39.3 17.2-76 48.4-103.3C430.4 290.4 470 276 512 276s81.6 14.5 111.6 40.7C654.8 344 672 380.7 672 420c0 57.8-38.1 109.8-97.1 132.5z" fill="currentColor"/></svg>
-                        </span>
-                        <div class="dropdown-menu dropdown-menu-arrow dropdown-menu-end dropdown-menu-card">
-                            <div class="card">
-                                <div class="card-header">
-                                    <div class="card-title" v-text="`Detalji o Bageru ${resource.name}`"></div>
-                                </div>
-                                <div class="card-body">
-                                    <div class="mb-2" style="white-space: nowrap;">
-                                        <!-- Download SVG icon from http://tabler-icons.io/i/map-pin -->
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon me-2 text-muted" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><circle cx="12" cy="11" r="3"></circle><path d="M17.657 16.657l-4.243 4.243a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 1 1 11.314 0z"></path></svg>
-                                        Lokacija:
-                                        <strong>
-                                            <span class="flag flag-country-si"></span>
-                                            {{ resource.excavation_field }}
-                                        </strong>
-                                    </div>
-                                    <div class="mb-2" style="white-space: nowrap;">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-currency-ripple"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path> <circle cx="7" cy="12" r="3"></circle> <circle cx="17" cy="7" r="3"></circle> <circle cx="17" cy="17" r="3"></circle> <path d="M10 12h3l2 -2.5"></path> <path d="M15 14.5l-2 -2.5"></path></svg>
-                                        Teorijski Kapacitet: <strong v-text="`${resource.max_capacity ? resource.max_capacity : '---' } m3`"></strong>
-                                    </div>
-                                    <div>
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file-description" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                            <desc>Download more icon variants from https://tabler-icons.io/i/file-description</desc>
-                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                            <path d="M14 3v4a1 1 0 0 0 1 1h4"></path>
-                                            <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z"></path>
-                                            <path d="M9 17h6"></path>
-                                            <path d="M9 13h6"></path>
-                                        </svg>
-                                        O Bageru: <p v-text="resource.in_short"></p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    <h3 class="ms-2 mt-2 text-nowrap" v-text="resource.name"></h3>
+                    <div class="ms-2 mt-1">
+                        <a href="#" class="text-info bg-green-lt" @click.prevent="$emit('show_details', {station: resource.id})" aria-label="Prikaži Detalje">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                                <rect x="4" y="4" width="16" height="16" rx="2"></rect>
+                                <polyline points="11 12 12 12 12 16 13 16"></polyline>
+                            </svg>
+                        </a>
                     </div>
-                    <div class="ms-auto">
-                        <a class="btn btn-outline-dark w-100" @click.prevent="$emit('show_graph', {station: resource.id})" href="#">
+                    <div class="ms-auto mt-2">
+                        <a class="btn w-100" @click.prevent="$emit('show_graph', {station: resource.id})" href="#">
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-device-analytics" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                 <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                                 <rect x="3" y="4" width="18" height="12" rx="1"></rect>
@@ -63,14 +35,12 @@
                     </div>
                 </div>
                 <chart
-                    :graph_data="graph_data"
-                    :graph_title="`Iskopano od 07:00 : ${totalFlow} m3`"
                     :update_chart="update_chart"
                     :resource_id="resource.id"
                 >
                 </chart>
             </div>
-            <div class="card-body">
+            <div class="card-footer pt-1 pb-1" :class="{ 'bg-red-lt': ! isComunication }">
                 <div class="d-flex align-items-center">
                     <div class="subheader">Trenutni Protok</div>
                 </div>
@@ -86,13 +56,28 @@
                         </svg>
                     </div>
                     <div class="h1 mb-0 ms-3 col" v-text="`${current_flow} m3`"></div>
-                    <div class="me-auto">
-<!--                        <span class="text-green d-inline-flex align-items-center lh-1">
-                          8% &lt;!&ndash; Download SVG icon from http://tabler-icons.io/i/trending-up &ndash;&gt;
-                          <svg xmlns="http://www.w3.org/2000/svg" class="icon ms-1" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><polyline points="3 17 9 11 13 15 21 7"></polyline><polyline points="14 7 21 7 21 14"></polyline></svg>
-                        </span>-->
+                    <div class="me-auto" v-if="isComunication">
+                        <a href="#" @click.prevent="toggleStatuses" class="d-inline-flex align-items-center lh-1" :class="isComunication ? 'text-success' : 'text-danger'">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                               <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                               <polyline points="7 7 12 12 17 7"></polyline>
+                               <polyline points="7 13 12 18 17 13"></polyline>
+                            </svg>
+                        </a>
+                    </div>
+                    <div class="me-auto" v-else>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="core" aria-hidden="true" role="img" width="24" height="24" preserveAspectRatio="xMidYMid meet" viewBox="0 0 36 36"><circle cx="18" cy="29.54" r="3" fill="currentColor" class="clr-i-solid clr-i-solid-path-1"/><path fill="currentColor" d="m29.18 17.71l.11-.17a1.51 1.51 0 0 0-.47-2.1A20.57 20.57 0 0 0 18 12.37c-.56 0-1.11 0-1.65.07l3.21 3.21a17.41 17.41 0 0 1 7.6 2.52a1.49 1.49 0 0 0 2.02-.46Z" class="clr-i-solid clr-i-solid-path-2"/><path fill="currentColor" d="M32.76 9.38a27.9 27.9 0 0 0-22.58-3.11l2.63 2.63a24.68 24.68 0 0 1 18.29 3.22a1.49 1.49 0 0 0 2-.46l.11-.17a1.51 1.51 0 0 0-.45-2.11Z" class="clr-i-solid clr-i-solid-path-3"/><path fill="currentColor" d="m3 4.75l3.1 3.1a27.28 27.28 0 0 0-2.92 1.57a1.51 1.51 0 0 0-.48 2.11l.11.17a1.49 1.49 0 0 0 2 .46a24.69 24.69 0 0 1 3.67-1.9l3.14 3.14a20.63 20.63 0 0 0-4.53 2.09a1.51 1.51 0 0 0-.46 2.1l.11.17a1.49 1.49 0 0 0 2 .46A17.46 17.46 0 0 1 14.25 16l3.6 3.6a13.39 13.39 0 0 0-6.79 1.93a1.5 1.5 0 0 0-.46 2.09l.1.16a1.52 1.52 0 0 0 2.06.44a10.2 10.2 0 0 1 9-.7L29 30.75l1.41-1.41l-26-26Z" class="clr-i-solid clr-i-solid-path-4"/><path fill="none" d="M0 0h36v36H0z"/></svg>
                     </div>
                 </div>
+            </div>
+            <div v-if="show_status" class="row m-0">
+                <div class="col text-center border" :class="{'bg-success-lt border-success': statuses[6]}" v-text="statuses[6] ? '24VDC OK' : '24VDC'"></div>
+                <div class="col text-center border" :class="{'bg-success-lt border-success': statuses[7]}" v-text="statuses[7] ? 'Radi' : 'Ne radi'"></div>
+                <div class="col text-center border" :class="{'bg-success-lt border-success': statuses[5]}">Kalibracija</div>
+                <div class="w-100"></div>
+                <div class="col text-center border" :class="{'bg-success-lt border-success': statuses[4]}" v-text="statuses[4] ? 'UPS 24V OK' : 'UPS 24V'"></div>
+                <div class="col text-center border" :class="{'bg-danger-lt border-danger': statuses[3]}">Ups Alarm</div>
+                <div class="col text-center border" :class="{'bg-success-lt border-success': statuses[2]}" v-text="statuses[2] ? 'UPS Bat OK' : 'UPS Bat'"></div>
             </div>
         </div>
     </div>
@@ -104,26 +89,26 @@
 import chart from './TargetChart';
 
 export default {
-    props: ['panel_flows', 'current_flow', 'resource', 'graph_data', 'update_chart'],
+    props: ['current_flow', 'resource', 'update_chart', 'statuses'],
     data() {
         return {
-            show_graph: false
+            show_graph: false,
+            show_status: false,
         }
     },
     components: {
         chart,
     },
-    computed:{
-        totalFlow() {
-            if(this.update_chart.length && this.update_chart.data.panel_flows[this.resource.id]){
-                return this.update_chart.data.panel_flows[this.resource.id][0].total_flow;
-            }
-            if(this.panel_flows[this.resource.id]){
-                return this.panel_flows[this.resource.id][0].total_flow;
-            }
-            return 0;
+    methods: {
+        toggleStatuses() {
+            this.show_status = ! this.show_status;
         }
     },
+    computed: {
+        isComunication() {
+            return this.statuses.reduce((a, b) => a || b, false);
+        }
+    }
 }
 </script>
 

@@ -36,6 +36,14 @@ return [
             'throw' => false,
         ],
 
+        'rodents' => [
+            'driver' => 'local',
+            'root' => public_path('images/rodents'),
+            'url' => env('APP_URL').'/images/rodents',
+            'visibility' => 'public',
+            'throw' => false,
+        ],
+
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),

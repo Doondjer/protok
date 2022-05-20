@@ -33,6 +33,6 @@ class NewFlow implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('flow');
+        return new Channel('panel');
     }
 }

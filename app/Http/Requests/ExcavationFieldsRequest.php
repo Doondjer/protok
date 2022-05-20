@@ -24,7 +24,7 @@ class ExcavationFieldsRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'      => 'required|string|max:70',
+            'name'      => 'required|string|unique:excavation_fields,name|max:70',
         ];
     }
 }

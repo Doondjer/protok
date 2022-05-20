@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Acme\Repositories\FlowRepository;
 use App\Http\Resources\RodentCollection;
+use App\Http\Resources\RodentResource;
 use App\Models\Rodent;
 use Illuminate\Http\Response;
 
@@ -18,7 +19,13 @@ class FLowsController extends Controller
 
     public function index()
     {
-        $rodents = new RodentCollection(Rodent::with('excavationField')->orderBy('rodent_id')->get()->keyBy->rodent_id);
+        $rodents = RodentResource::collection(
+            Rodent::with('excavationField')
+            ->with('rodentType.rodentAttributes')
+            ->orderBy('rodent_id')
+            ->get()
+
+        )->keyBy->rodent_id;
 
         $panelFlows = $this->flowRepository->getPanelData();
 

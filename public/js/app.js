@@ -10352,6 +10352,9 @@ vue__WEBPACK_IMPORTED_MODULE_0__["default"].component('panel', function () {
 vue__WEBPACK_IMPORTED_MODULE_0__["default"].component('array_text_input', function () {
   return __webpack_require__.e(/*! import() */ "resources_js_components_ArrayTextInput_vue").then(__webpack_require__.bind(__webpack_require__, /*! ./components/ArrayTextInput */ "./resources/js/components/ArrayTextInput.vue"));
 });
+vue__WEBPACK_IMPORTED_MODULE_0__["default"].component('rodentAttributes', function () {
+  return __webpack_require__.e(/*! import() */ "resources_js_components_RodentAttributes_vue").then(__webpack_require__.bind(__webpack_require__, /*! ./components/RodentAttributes */ "./resources/js/components/RodentAttributes.vue"));
+});
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
  * for events that are broadcast by Laravel. Echo and event broadcasting
@@ -29416,7 +29419,7 @@ Vue.compile = compileToFunctions;
 /******/ 		// This function allow to reference async chunks
 /******/ 		__webpack_require__.u = (chunkId) => {
 /******/ 			// return url for filenames not based on template
-/******/ 			if ({"resources_js_components_Panel_vue":1,"resources_js_components_ArrayTextInput_vue":1,"resources_js_components_Object_vue":1,"resources_js_components_ExtendedChart_vue":1,"resources_js_components_Paginator_vue":1}[chunkId]) return "js/" + chunkId + ".js";
+/******/ 			if ({"resources_js_components_Panel_vue":1,"resources_js_components_ArrayTextInput_vue":1,"resources_js_components_RodentAttributes_vue":1,"resources_js_components_Object_vue":1,"resources_js_components_ExtendedChart_vue":1,"resources_js_components_RodentDetails_vue":1,"resources_js_components_Paginator_vue":1,"resources_js_components_DatePicker_vue":1}[chunkId]) return "js/" + chunkId + ".js";
 /******/ 			// return url for filenames based on template
 /******/ 			return undefined;
 /******/ 		};

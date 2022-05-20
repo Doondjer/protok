@@ -20,33 +20,18 @@
     'required' => true,
     'tagType' => 'selectbox',
     'label' => 'Radna Jedinica',
-    'tagName' => 'excavation_field',
+    'tagName' => 'excavation_field_id',
     'placeholder' => 'Odaberite Polje...',
     'hint' => 'Odaberite Površinski Kop na kojem se bager nalazi',
     'data' => $excavationFields
 ])
-{{--   Teorijski Kapacitet Bagera --}}
+{{--   Tip Bagera   --}}
 @include('admin.partials.form_group', [
-    'required' => false,
-    'label' => 'Max Kapacitet',
-    'tagName' => 'max_capacity',
-    'placeholder' => 'Unesite Kapacitet Bagera...',
-    'hint' => 'Unesite Teorijski Kapacitet Bagera',
-])
-{{--   Slika Bagera --}}
-@include('admin.partials.form_group', [
-    'required' => false,
-    'label' => 'Slika Bagera',
-    'tagName' => 'image',
-    'placeholder' => 'Unesite ime slike Bagera...',
-    'hint' => 'Unesite {ime.extenzija} slike Bagera koju ste uploadovali u public/rodents folder',
-])
-{{--   Ukratko o Bageru   --}}
-@include('admin.partials.form_group', [
-    'tagType' => 'textarea',
-    'required' => false,
-    'label' => 'Ukratko o Bageru',
-    'tagName' => 'in_short',
-    'placeholder' => 'Unesite kratak tekst o Bageru...',
-    'hint' => 'Kratak tekst opis ili tekst o Bageru...',
+    'required' => true,
+    'tagType' => 'selectbox',
+    'label' => 'Model Bagera',
+    'tagName' => 'rodent_type_id',
+    'placeholder' => 'Odaberite Tip Bagera...',
+    'hint' => 'Odaberite Tip Bagera',
+    'data' => $rodentTypes
 ])

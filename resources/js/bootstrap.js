@@ -24,6 +24,7 @@ Vue.use(VueApexCharts);
 
 Vue.component('panel', () => import("./components/Panel"));
 Vue.component('array_text_input', () => import("./components/ArrayTextInput"));
+Vue.component('rodentAttributes', () => import("./components/RodentAttributes"));
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
  * for events that are broadcast by Laravel. Echo and event broadcasting

@@ -19,3 +19,6 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
 Broadcast::channel('panel', function ($user, $id) {
     return $user;
 });
+Broadcast::channel('current_data', function ($user, $id) {
+    return $user;
+});

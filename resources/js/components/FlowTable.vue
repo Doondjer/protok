@@ -16,9 +16,7 @@
                                 recorda
                             </div>
                             <div class="ms-auto text-muted">
-
-                                <a class="btn btn-outline-danger" download="tabler-icon-device-analytics.svg" href="#"
-                                   @click.prevent="exportTable">
+                                <a href="#" @click.prevent="toggleExport" class="btn btn-outline-danger">
                                     <svg class="icon icon-tabler icon-tabler-file-export" fill="none" height="24"
                                          stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"
                                          width="24" xmlns="http://www.w3.org/2000/svg">
@@ -26,11 +24,16 @@
                                         <path d="M14 3v4a1 1 0 0 0 1 1h4"></path>
                                         <path d="M11.5 21h-4.5a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v5m-5 6h7m-3 -3l3 3l-3 3"></path>
                                     </svg>
-                                    Eksport SVG
+                                    Export
                                 </a>
                             </div>
                         </div>
                     </div>
+
+
+                    <date-picker v-if="show_export" :station="this.rodent" ></date-picker>
+
+
                     <div class="table-responsive">
                         <table class="table card-table table-vcenter text-nowrap datatable">
                             <thead>
@@ -102,6 +105,7 @@ import apiService from "../services/ApiService";
 import Swal from "sweetalert2";
 
 const paginator = () => import('./Paginator');
+const datePicker = () => import( './DatePicker');
 
 export default {
     name: 'FlowTable',
@@ -116,11 +120,13 @@ export default {
                 rodent: this.rodent.id,
                 per_page: 10,
                 page:1
-            }
+            },
+            show_export: false,
         }
     },
     components: {
         paginator,
+        datePicker,
     },
     created() {
         this.fetch();
@@ -139,9 +145,9 @@ export default {
             this.form.per_page = this.dataSet.per_page;
             this.flows = data.data.data;
         },
-        exportTable() {
-            window.open(apiService.exportExcel(this.rodent.id));
-        },
+        toggleExport(){
+            this.show_export = ! this.show_export;
+        }
     }
 }
 </script>

@@ -24,6 +24,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js");
 /* harmony import */ var vue_fullscreen__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue-fullscreen */ "./node_modules/vue-fullscreen/dist/vue-fullscreen.min.js");
 /* harmony import */ var vue_fullscreen__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vue_fullscreen__WEBPACK_IMPORTED_MODULE_1__);
 
@@ -99,6 +100,23 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
 var ObjectResource = function ObjectResource() {
   return __webpack_require__.e(/*! import() */ "resources_js_components_Object_vue").then(__webpack_require__.bind(__webpack_require__, /*! ./Object */ "./resources/js/components/Object.vue"));
 };
@@ -107,31 +125,48 @@ var largeChart = function largeChart() {
   return __webpack_require__.e(/*! import() */ "resources_js_components_ExtendedChart_vue").then(__webpack_require__.bind(__webpack_require__, /*! ./ExtendedChart */ "./resources/js/components/ExtendedChart.vue"));
 };
 
+var rodentDetails = function rodentDetails() {
+  return __webpack_require__.e(/*! import() */ "resources_js_components_RodentDetails_vue").then(__webpack_require__.bind(__webpack_require__, /*! ./RodentDetails */ "./resources/js/components/RodentDetails.vue"));
+};
+
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   props: ['rodent_list', 'panel_flows', 'graph_data', 'current_flows'],
+  emits: ['update:current_flows'],
   data: function data() {
     return {
       section: 'polje_b',
       filterType: 'all',
       filterString: '',
       show_graph: null,
-      updateChart: [],
+      show_details: null,
+      updateChart: null,
       fullscreen: false,
-      teleport: true
+      teleport: true,
+      currentFlows: {},
+      statuses: {}
     };
   },
   components: {
     ObjectResource: ObjectResource,
-    largeChart: largeChart
+    largeChart: largeChart,
+    rodentDetails: rodentDetails
   },
   methods: {
     showExtendedGraph: function showExtendedGraph(_ref) {
       var station = _ref.station;
+      console.log(station);
       this.show_graph = station;
+    },
+    showDetails: function showDetails(_ref2) {
+      var station = _ref2.station;
+      this.show_details = station;
     },
     closeGraph: function closeGraph() {
       this.show_graph = null;
+    },
+    closeDetails: function closeDetails() {
+      this.show_details = null;
     },
     toggle: function toggle() {
       var _this = this;
@@ -144,14 +179,12 @@ var largeChart = function largeChart() {
                 _context.next = 2;
                 return vue_fullscreen__WEBPACK_IMPORTED_MODULE_1__.api.toggle(_this.$el.querySelector('.fullscreen-wrapper'), {
                   teleport: _this.teleport,
-                  callback: function callback(isFullscreen) {//this.fullscreen = isFullscreen
+                  callback: function callback(isFullscreen) {
+                    _this.fullscreen = isFullscreen;
                   }
                 });
 
               case 2:
-                _this.fullscreen = vue_fullscreen__WEBPACK_IMPORTED_MODULE_1__.api.isFullscreen;
-
-              case 3:
               case "end":
                 return _context.stop();
             }
@@ -162,16 +195,39 @@ var largeChart = function largeChart() {
   },
   computed: {
     rodents: function rodents() {
-      return this.rodent_list.data;
+      return this.rodent_list;
+    },
+    showExpand: function showExpand() {
+      console.log(screen.height);
+      return screen.height >= 864;
     }
   },
   mounted: function mounted() {
     var _this2 = this;
 
-    //  this.loadAllResources();
-    Echo.channel('flow').listen('NewFlow', function (data) {
-      console.log(data);
+    setTimeout(function () {
+      _this2.updateChart = {
+        data: {
+          graphData: _this2.graph_data,
+          panelFlows: _this2.panel_flows
+        }
+      };
+    }, 1);
+    Echo.channel('panel').listen('NewFlow', function (data) {
       _this2.updateChart = data;
+    });
+    Echo.channel('current_data').listen('NewCurrentFlow', function (_ref3) {
+      var data = _ref3.data;
+
+      if (data) {
+        vue__WEBPACK_IMPORTED_MODULE_2__["default"].set(_this2.currentFlows, data.rodent_id, data.current_flow);
+
+        if (data.status) {
+          vue__WEBPACK_IMPORTED_MODULE_2__["default"].set(_this2.statuses, data.rodent_id, data.status.split('').map(function (status) {
+            return status === '1';
+          }));
+        }
+      }
     });
   }
 });
@@ -1042,9 +1098,12 @@ var render = function () {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    { staticClass: "fullscreen-wrapper" },
+    {
+      staticClass: "fullscreen-wrapper",
+      class: { "page page-center": _vm.fullscreen },
+    },
     [
-      _c("div", { staticClass: "container-xl" }, [
+      _c("div", { staticClass: "container-xl panel-header" }, [
         _c("div", { staticClass: "page-header d-print-none" }, [
           _c("div", { staticClass: "row g-2 align-items-center" }, [
             _vm._m(0),
@@ -1053,78 +1112,195 @@ var render = function () {
               "div",
               { staticClass: "col-12 col-md-auto ms-auto d-print-none" },
               [
-                _c("div", { staticClass: "btn-list" }, [
-                  _c(
-                    "button",
-                    {
-                      staticClass: "btn",
-                      attrs: { type: "button" },
-                      on: { click: _vm.toggle },
-                    },
-                    [
-                      _c(
-                        "svg",
-                        {
-                          staticClass:
-                            "icon icon-tabler icon-tabler-arrows-maximize",
-                          attrs: {
-                            xmlns: "http://www.w3.org/2000/svg",
-                            width: "24",
-                            height: "24",
-                            viewBox: "0 0 24 24",
-                            "stroke-width": "2",
-                            stroke: "currentColor",
-                            fill: "none",
-                            "stroke-linecap": "round",
-                            "stroke-linejoin": "round",
-                          },
-                        },
-                        [
-                          _c("path", {
-                            attrs: {
-                              stroke: "none",
-                              d: "M0 0h24v24H0z",
-                              fill: "none",
+                _vm.showExpand
+                  ? _c("div", { staticClass: "btn-list" }, [
+                      _vm.fullscreen
+                        ? _c(
+                            "button",
+                            {
+                              staticClass: "btn expand-screen",
+                              attrs: { type: "button" },
+                              on: { click: _vm.toggle },
                             },
-                          }),
-                          _vm._v(" "),
-                          _c("polyline", {
-                            attrs: { points: "16 4 20 4 20 8" },
-                          }),
-                          _vm._v(" "),
-                          _c("line", {
-                            attrs: { x1: "14", y1: "10", x2: "20", y2: "4" },
-                          }),
-                          _vm._v(" "),
-                          _c("polyline", {
-                            attrs: { points: "8 20 4 20 4 16" },
-                          }),
-                          _vm._v(" "),
-                          _c("line", {
-                            attrs: { x1: "4", y1: "20", x2: "10", y2: "14" },
-                          }),
-                          _vm._v(" "),
-                          _c("polyline", {
-                            attrs: { points: "16 20 20 20 20 16" },
-                          }),
-                          _vm._v(" "),
-                          _c("line", {
-                            attrs: { x1: "14", y1: "14", x2: "20", y2: "20" },
-                          }),
-                          _vm._v(" "),
-                          _c("polyline", { attrs: { points: "8 4 4 4 4 8" } }),
-                          _vm._v(" "),
-                          _c("line", {
-                            attrs: { x1: "4", y1: "4", x2: "10", y2: "10" },
-                          }),
-                        ]
-                      ),
-                      _vm._v(
-                        "\n                               Proširi prikaz\n                           "
-                      ),
-                    ]
-                  ),
-                ]),
+                            [
+                              _c(
+                                "svg",
+                                {
+                                  staticClass:
+                                    "icon icon-tabler icon-tabler-arrows-minimize",
+                                  attrs: {
+                                    xmlns: "http://www.w3.org/2000/svg",
+                                    width: "24",
+                                    height: "24",
+                                    viewBox: "0 0 24 24",
+                                    "stroke-width": "2",
+                                    stroke: "currentColor",
+                                    fill: "none",
+                                    "stroke-linecap": "round",
+                                    "stroke-linejoin": "round",
+                                  },
+                                },
+                                [
+                                  _c("path", {
+                                    attrs: {
+                                      stroke: "none",
+                                      d: "M0 0h24v24H0z",
+                                      fill: "none",
+                                    },
+                                  }),
+                                  _vm._v(" "),
+                                  _c("polyline", {
+                                    attrs: { points: "5 9 9 9 9 5" },
+                                  }),
+                                  _vm._v(" "),
+                                  _c("line", {
+                                    attrs: {
+                                      x1: "3",
+                                      y1: "3",
+                                      x2: "9",
+                                      y2: "9",
+                                    },
+                                  }),
+                                  _vm._v(" "),
+                                  _c("polyline", {
+                                    attrs: { points: "5 15 9 15 9 19" },
+                                  }),
+                                  _vm._v(" "),
+                                  _c("line", {
+                                    attrs: {
+                                      x1: "3",
+                                      y1: "21",
+                                      x2: "9",
+                                      y2: "15",
+                                    },
+                                  }),
+                                  _vm._v(" "),
+                                  _c("polyline", {
+                                    attrs: { points: "19 9 15 9 15 5" },
+                                  }),
+                                  _vm._v(" "),
+                                  _c("line", {
+                                    attrs: {
+                                      x1: "15",
+                                      y1: "9",
+                                      x2: "21",
+                                      y2: "3",
+                                    },
+                                  }),
+                                  _vm._v(" "),
+                                  _c("polyline", {
+                                    attrs: { points: "19 15 15 15 15 19" },
+                                  }),
+                                  _vm._v(" "),
+                                  _c("line", {
+                                    attrs: {
+                                      x1: "15",
+                                      y1: "15",
+                                      x2: "21",
+                                      y2: "21",
+                                    },
+                                  }),
+                                ]
+                              ),
+                              _vm._v(
+                                "\n                               Skupi prikaz\n                           "
+                              ),
+                            ]
+                          )
+                        : _c(
+                            "button",
+                            {
+                              staticClass: "btn expand-screen",
+                              attrs: { type: "button" },
+                              on: { click: _vm.toggle },
+                            },
+                            [
+                              _c(
+                                "svg",
+                                {
+                                  staticClass:
+                                    "icon icon-tabler icon-tabler-arrows-maximize",
+                                  attrs: {
+                                    xmlns: "http://www.w3.org/2000/svg",
+                                    width: "24",
+                                    height: "24",
+                                    viewBox: "0 0 24 24",
+                                    "stroke-width": "2",
+                                    stroke: "currentColor",
+                                    fill: "none",
+                                    "stroke-linecap": "round",
+                                    "stroke-linejoin": "round",
+                                  },
+                                },
+                                [
+                                  _c("path", {
+                                    attrs: {
+                                      stroke: "none",
+                                      d: "M0 0h24v24H0z",
+                                      fill: "none",
+                                    },
+                                  }),
+                                  _vm._v(" "),
+                                  _c("polyline", {
+                                    attrs: { points: "16 4 20 4 20 8" },
+                                  }),
+                                  _vm._v(" "),
+                                  _c("line", {
+                                    attrs: {
+                                      x1: "14",
+                                      y1: "10",
+                                      x2: "20",
+                                      y2: "4",
+                                    },
+                                  }),
+                                  _vm._v(" "),
+                                  _c("polyline", {
+                                    attrs: { points: "8 20 4 20 4 16" },
+                                  }),
+                                  _vm._v(" "),
+                                  _c("line", {
+                                    attrs: {
+                                      x1: "4",
+                                      y1: "20",
+                                      x2: "10",
+                                      y2: "14",
+                                    },
+                                  }),
+                                  _vm._v(" "),
+                                  _c("polyline", {
+                                    attrs: { points: "16 20 20 20 20 16" },
+                                  }),
+                                  _vm._v(" "),
+                                  _c("line", {
+                                    attrs: {
+                                      x1: "14",
+                                      y1: "14",
+                                      x2: "20",
+                                      y2: "20",
+                                    },
+                                  }),
+                                  _vm._v(" "),
+                                  _c("polyline", {
+                                    attrs: { points: "8 4 4 4 4 8" },
+                                  }),
+                                  _vm._v(" "),
+                                  _c("line", {
+                                    attrs: {
+                                      x1: "4",
+                                      y1: "4",
+                                      x2: "10",
+                                      y2: "10",
+                                    },
+                                  }),
+                                ]
+                              ),
+                              _vm._v(
+                                "\n                               Proširi prikaz\n                           "
+                              ),
+                            ]
+                          ),
+                    ])
+                  : _vm._e(),
               ]
             ),
           ]),
@@ -1136,19 +1312,23 @@ var render = function () {
           _c(
             "span",
             { staticClass: "row row-cards" },
-            _vm._l(_vm.rodent_list.data, function (resource, id) {
+            _vm._l(_vm.rodent_list, function (resource, id) {
               return _c("object-resource", {
                 key: id,
                 attrs: {
-                  graph_data: _vm.graph_data[resource.id],
                   update_chart: _vm.updateChart,
                   resource: resource,
-                  current_flow: _vm.current_flows[resource.id]
-                    ? _vm.current_flows[resource.id]
+                  current_flow: _vm.currentFlows[resource.id]
+                    ? _vm.currentFlows[resource.id]
                     : 0,
-                  panel_flows: _vm.panel_flows,
+                  statuses: _vm.statuses[resource.id]
+                    ? _vm.statuses[resource.id]
+                    : [false, false, false, false, false, false, false, false],
                 },
-                on: { show_graph: _vm.showExtendedGraph },
+                on: {
+                  show_graph: _vm.showExtendedGraph,
+                  show_details: _vm.showDetails,
+                },
               })
             }),
             1
@@ -1160,6 +1340,13 @@ var render = function () {
         ? _c("large-chart", {
             attrs: { rodent: _vm.rodents[_vm.show_graph] },
             on: { close_graph: _vm.closeGraph },
+          })
+        : _vm._e(),
+      _vm._v(" "),
+      _vm.show_details
+        ? _c("rodent-details", {
+            attrs: { rodent: _vm.rodents[_vm.show_details] },
+            on: { close_details: _vm.closeDetails },
           })
         : _vm._e(),
     ],

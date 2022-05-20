@@ -55,6 +55,7 @@
                             </div>
                         </div>
                     </form>
+                    @yield('after_form_content')
                 @endif
             </div>
         </div>

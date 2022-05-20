@@ -9,6 +9,7 @@
         "aldas/modbus-tcp-client": "^3.0",
         "beyondcode/laravel-websockets": "^1.13",
         "guzzlehttp/guzzle": "^7.2",
+        "intervention/image": "^2.7",
         "laravel/fortify": "^1.12",
         "laravel/framework": "^9.2",
         "laravel/sanctum": "^2.15",
@@ -16,6 +17,7 @@
         "maatwebsite/excel": "^3.1",
         "phpoffice/phpspreadsheet": "^1.23",
         "pusher/pusher-php-server": "^7.0",
+        "spatie/laravel-short-schedule": "^1.5",
         "spatie/laravel-sluggable": "^3.4"
     },
     "require-dev": {

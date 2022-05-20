@@ -15,7 +15,7 @@ class SendFlow extends Command
      *
      * @var string
      */
-    protected $signature = 'start:flow';
+    protected $signature = 'send:panel';
 
     /**
      * The console command description.

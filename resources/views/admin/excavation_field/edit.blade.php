@@ -1,5 +1,5 @@
 @extends('admin.layouts.form.create_edit', [
-    'breadcrumbLinks' => ['Stranice' => route('excavation-field.index')],
+    'breadcrumbLinks' => ['Radne Jedinice' => route('excavation-field.index')],
     'formAction' => route('excavation-field.update', ['excavation_field' => $model]),
     'formMethod' => 'PATCH',
 ])

@@ -16,12 +16,20 @@ class FlowRepository
     public function getSevenDayFlowBarData(int $stationId)
     {
         $bars = Flow::where('StationId', $stationId)
-            ->select(DB::raw('ROUND(sum(ValueVrednost) * 3600 / 15, 1) as flow, CAST( DatumVreme AS Date ) date, Smena as shift'))
-            ->orderBy(DB::raw('CAST( DatumVreme AS Date )'),'desc')
-            ->groupBy(DB::raw('CAST( DatumVreme AS Date )'),'Smena')
-            ->whereDate('DatumVreme', '>=', Carbon::now()->subDays(7)->toDate())
+            ->select(DB::raw('ROUND(sum(ValueVrednost) * 3600 / 15, 1) as flow, FORMAT(CAST( Datum_date AS Date ), \'d MMM\') date, Smena as shift'))
+            ->orderBy('Datum_date','desc')
+            ->groupBy('Datum_date','Smena')
+            ->whereDate('Datum_date', '>=', Carbon::today()->subDays(7))
             ->get()
             ->groupBy(['date', 'shift']);
+
+       /* $bars = Flow::where('StationId', $stationId)
+            ->select(DB::raw('ROUND(sum(ValueVrednost) * 3600 / 15, 1) as flow, FORMAT(CAST( Datum_date AS Date ), \'d MMM\') date, Smena as shift'))
+            ->orderBy(DB::raw('CAST( Datum_date AS Date )'),'desc')
+            ->groupBy(DB::raw('CAST( Datum_date AS Date )'),'Smena')
+            ->whereDate('Datum_date', '>=', Carbon::now()->subDays(7)->toDate())
+            ->get()
+            ->groupBy(['date', 'shift']);*/
 
         return $this->createShiftSeries($bars);
     }
@@ -63,10 +71,13 @@ class FlowRepository
      */
     public function getPanelGraphData()
     {
+        $time = Carbon::create('2019-07-6');
         return Flow::select(
             DB::raw('sum(ValueVrednost * 900) as shift_flow, count(ValueVrednost) as nb_flows, Smena as shift, StationId as station_id')
         )
-            ->whereRaw("CAST(DatumVreme as datetime) >= '" . $this->getStartDateTime() . "'")
+            //    ->whereRaw("CAST(DatumVreme as datetime) >= '" . $time . "'")
+             //   ->whereRaw("CAST(DatumVreme as datetime) < '" . $time->addDay() . "'")
+              ->whereRaw("CAST(DatumVreme as datetime) >= '" . $this->getStartDateTime() . "'")
             ->groupBy('StationId', 'Smena')
             ->get()
             ->groupBy('station_id');
@@ -77,9 +88,14 @@ class FlowRepository
      */
     public function getPanelData()
     {
+
+        $time = Carbon::create('2019-07-6');
+
         return Flow::select(
             DB::raw('count(ValueVrednost) as nb_flows, StationId as station_id, Datum_date as date, Smena as shift, sum(ValueVrednost * 900) as total_flow, avg(ValueVrednost * 3600) as current_flow')
         )
+          //  ->whereRaw("CAST(DatumVreme as datetime) >= '" . $time . "'")
+          //  ->whereRaw("CAST(DatumVreme as datetime) < '" . $time->addDay() . "'")
             ->whereRaw("CAST(DatumVreme as datetime) >= '" . $this->getStartDateTime() . "'")
             ->groupBy('StationId', 'Datum_date', 'Smena')
             ->orderByRaw('StationId asc, Datum_date asc, Smena asc')

@@ -8,7 +8,7 @@
     <div class="wrapper">
         <div class="page-wrapper">
             <div class="container-xl">
-                @include('partials.top_messages')
+                @include('partials.system_messages')
 
                 @yield('body-header')
 

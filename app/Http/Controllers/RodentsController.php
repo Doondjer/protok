@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\RodentsRequest;
 use App\Models\ExcavationField;
 use App\Models\Rodent;
+use App\Models\RodentType;
 use Symfony\Component\HttpFoundation\Response;
 
 class RodentsController extends Controller
@@ -42,9 +43,7 @@ class RodentsController extends Controller
             'name'                  => $rodent->name,
             'excavation_field'      => $rodent->excavationField()->name,
             'excavation_field_slug' => $rodent->excavationField()->slug,
-            'max_capacity'          => $rodent->max_capacity,
-            'image'                 => $rodent->image,
-            'in_short'              => $rodent->in_short,
+            'more_info'             => $rodent->rodentType,
 
         ], Response::HTTP_OK);
     }
@@ -56,9 +55,10 @@ class RodentsController extends Controller
      */
     public function create()
     {
-        $excavationFields = ExcavationField::pluck('name','slug');
+        $excavationFields = ExcavationField::pluck('name','id');
+        $rodentTypes      = RodentType::pluck('name','id');
 
-        return view('admin.rodent.create', compact('excavationFields'));
+        return view('admin.rodent.create', compact('excavationFields', 'rodentTypes'));
     }
 
     /**
@@ -69,8 +69,10 @@ class RodentsController extends Controller
      */
     public function store(RodentsRequest $request)
     {
-        $excavationField = ExcavationField::whereSlug($request->get('excavation_field'))->firstOrFail();
-        $rodent = $excavationField->rodents()->create($request->validated());
+        $rodent = new Rodent($request->validated());
+        $rodent->excavation_field_id = $request->get('excavation_field_id');
+        $rodent->rodent_type_id = $request->get('rodent_type_id');
+        $rodent->save();
 
         return redirect()->route('rodent.index')->with('success', "Bager '$rodent->name' je uspešno kreiran.");
     }
@@ -83,11 +85,13 @@ class RodentsController extends Controller
      */
     public function edit(Rodent $rodent)
     {
-        $excavationFields = ExcavationField::pluck('name','slug');
+        $excavationFields = ExcavationField::pluck('name','id');
+        $rodentTypes      = RodentType::pluck('name','id');
 
         return view('admin.rodent.edit', [
             'model' => $rodent,
-            'excavationFields' => $excavationFields
+            'excavationFields' => $excavationFields,
+            'rodentTypes' => $rodentTypes
             ]);
     }
 
@@ -100,6 +104,9 @@ class RodentsController extends Controller
      */
     public function update(Rodent $rodent, RodentsRequest $request)
     {
+        $rodent->excavationField()->associate($request->get('excavation_field_id'));
+        $rodent->rodentType()->associate($request->get('rodent_type_id'));
+
         $rodent->update($request->validated());
 
         return redirect()->route('rodent.index')->with('success', "Bager '$rodent->name' je uspešno izmenjen.");

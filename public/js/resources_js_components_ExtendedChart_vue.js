@@ -334,11 +334,18 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 
 
 var paginator = function paginator() {
   return __webpack_require__.e(/*! import() */ "resources_js_components_Paginator_vue").then(__webpack_require__.bind(__webpack_require__, /*! ./Paginator */ "./resources/js/components/Paginator.vue"));
+};
+
+var datePicker = function datePicker() {
+  return __webpack_require__.e(/*! import() */ "resources_js_components_DatePicker_vue").then(__webpack_require__.bind(__webpack_require__, /*! ./DatePicker */ "./resources/js/components/DatePicker.vue"));
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -354,11 +361,13 @@ var paginator = function paginator() {
         rodent: this.rodent.id,
         per_page: 10,
         page: 1
-      }
+      },
+      show_export: false
     };
   },
   components: {
-    paginator: paginator
+    paginator: paginator,
+    datePicker: datePicker
   },
   created: function created() {
     this.fetch();
@@ -376,8 +385,8 @@ var paginator = function paginator() {
       this.form.per_page = this.dataSet.per_page;
       this.flows = data.data.data;
     },
-    exportTable: function exportTable() {
-      window.open(_services_ApiService__WEBPACK_IMPORTED_MODULE_0__["default"].exportExcel(this.rodent.id));
+    toggleExport: function toggleExport() {
+      this.show_export = !this.show_export;
     }
   }
 });
@@ -501,8 +510,67 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }, _callee3);
     }))();
   },
-  exportExcel: function exportExcel(station) {
-    return "/admin/export/".concat(station);
+  exportExcel: function exportExcel(payload) {
+    return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee4() {
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee4$(_context4) {
+        while (1) {
+          switch (_context4.prev = _context4.next) {
+            case 0:
+              _context4.next = 2;
+              return _API__WEBPACK_IMPORTED_MODULE_1__.apiClient.get("sanctum/csrf-cookie");
+
+            case 2:
+              return _context4.abrupt("return", _API__WEBPACK_IMPORTED_MODULE_1__.apiClient.post("/export", payload, {
+                responseType: 'arraybuffer'
+              }));
+
+            case 3:
+            case "end":
+              return _context4.stop();
+          }
+        }
+      }, _callee4);
+    }))();
+  },
+  submitAttribute: function submitAttribute(slug, payload) {
+    return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee5() {
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee5$(_context5) {
+        while (1) {
+          switch (_context5.prev = _context5.next) {
+            case 0:
+              _context5.next = 2;
+              return _API__WEBPACK_IMPORTED_MODULE_1__.apiClient.get("/sanctum/csrf-cookie");
+
+            case 2:
+              return _context5.abrupt("return", _API__WEBPACK_IMPORTED_MODULE_1__.apiClient.post("/rodent-type/".concat(slug, "/attribute"), payload));
+
+            case 3:
+            case "end":
+              return _context5.stop();
+          }
+        }
+      }, _callee5);
+    }))();
+  },
+  deleteAttribute: function deleteAttribute(slug, id) {
+    return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee6() {
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee6$(_context6) {
+        while (1) {
+          switch (_context6.prev = _context6.next) {
+            case 0:
+              _context6.next = 2;
+              return _API__WEBPACK_IMPORTED_MODULE_1__.apiClient.get("/sanctum/csrf-cookie");
+
+            case 2:
+              return _context6.abrupt("return", _API__WEBPACK_IMPORTED_MODULE_1__.apiClient["delete"]("/rodent-type/".concat(slug, "/attribute/").concat(id)));
+
+            case 3:
+            case "end":
+              return _context6.stop();
+          }
+        }
+      }, _callee6);
+    }))();
   }
 });
 
@@ -4423,14 +4491,11 @@ var render = function () {
                       "a",
                       {
                         staticClass: "btn btn-outline-danger",
-                        attrs: {
-                          download: "tabler-icon-device-analytics.svg",
-                          href: "#",
-                        },
+                        attrs: { href: "#" },
                         on: {
                           click: function ($event) {
                             $event.preventDefault()
-                            return _vm.exportTable.apply(null, arguments)
+                            return _vm.toggleExport.apply(null, arguments)
                           },
                         },
                       },
@@ -4473,7 +4538,7 @@ var render = function () {
                           ]
                         ),
                         _vm._v(
-                          "\n                                Eksport SVG\n                            "
+                          "\n                                Export\n                            "
                         ),
                       ]
                     ),
@@ -4481,6 +4546,10 @@ var render = function () {
                 ]),
               ]
             ),
+            _vm._v(" "),
+            _vm.show_export
+              ? _c("date-picker", { attrs: { station: this.rodent } })
+              : _vm._e(),
             _vm._v(" "),
             _c("div", { staticClass: "table-responsive" }, [
               _c(

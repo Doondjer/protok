@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Http\Resources\RodentCollection;
+use App\Http\Resources\RodentResource;
 use App\Models\Configuration;
 use App\Models\Rodent;
 use Illuminate\Contracts\Cache\Factory;
@@ -39,7 +40,7 @@ class AppServiceProvider extends ServiceProvider
             $config = config('app_settings');
 
             if(Schema::hasTable('configuration')) {
-                $config['values'] = array_merge(config('app_settings.values'), $configuration->pluck('config_value', 'config_name')->toArray(), ['panel_resources' =>  RodentCollection::collection($rodents)]);
+                $config['values'] = array_merge(config('app_settings.values'), $configuration->pluck('config_value', 'config_name')->toArray(), ['panel_resources' =>  RodentResource::collection($rodents)], ['nb_rodents' =>  RodentResource::collection($rodents)->count()]);
             } else {
                 Log::error('Table Settings does not exists! Did you migrate properly?');
             }

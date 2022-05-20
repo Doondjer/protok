@@ -97,43 +97,28 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  props: ['panel_flows', 'current_flow', 'resource', 'graph_data', 'update_chart'],
+  props: ['current_flow', 'resource', 'update_chart', 'statuses'],
   data: function data() {
     return {
-      show_graph: false
+      show_graph: false,
+      show_status: false
     };
   },
   components: {
     chart: _TargetChart__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
+  methods: {
+    toggleStatuses: function toggleStatuses() {
+      this.show_status = !this.show_status;
+    }
+  },
   computed: {
-    totalFlow: function totalFlow() {
-      if (this.update_chart.length && this.update_chart.data.panel_flows[this.resource.id]) {
-        return this.update_chart.data.panel_flows[this.resource.id][0].total_flow;
-      }
-
-      if (this.panel_flows[this.resource.id]) {
-        return this.panel_flows[this.resource.id][0].total_flow;
-      }
-
-      return 0;
+    isComunication: function isComunication() {
+      return this.statuses.reduce(function (a, b) {
+        return a || b;
+      }, false);
     }
   }
 });
@@ -160,18 +145,39 @@ __webpack_require__.r(__webpack_exports__);
 //
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  props: ['graph_data', 'graph_title', 'update_chart', 'resource_id'],
+  props: ['update_chart', 'resource_id'],
   watch: {
     'update_chart.data.graphData': {
       handler: function handler(newVal) {
+        this.$refs.chart.updateOptions({
+          series: [{
+            name: "Iskopano",
+            data: this.getSeries(newVal[this.resource_id])
+          }]
+        });
+      },
+      deep: true
+    },
+    'update_chart.data.panelFlows': {
+      handler: function handler(newVal) {
+        var total = 0;
+
         if (newVal && newVal[this.resource_id]) {
-          this.$refs.chart.updateOptions({
-            series: [{
-              name: "Iskopano",
-              data: this.getSeries(newVal[this.resource_id])
-            }]
+          console.log(newVal[this.resource_id]);
+          newVal[this.resource_id].map(function (flow) {
+            console.log(flow);
+            total += flow.total_flow;
           });
         }
+
+        this.$refs.chart.updateOptions({
+          title: {
+            text: "Iskopano od 07:00 : ".concat(total, " m3"),
+            style: {
+              color: 'rgba(255, 255, 255, 0.7)'
+            }
+          }
+        });
       },
       deep: true
     }
@@ -189,9 +195,9 @@ __webpack_require__.r(__webpack_exports__);
         y: 0
       }],
       chartOptions: {
+        colors: ['#00a651'],
         chart: {
-          type: 'bar' //   height: 100
-
+          type: 'bar'
         },
         plotOptions: {
           bar: {
@@ -213,12 +219,6 @@ __webpack_require__.r(__webpack_exports__);
               return val + " m3";
             }
           }
-        },
-        title: {
-          text: this.graph_title,
-          style: {
-            color: 'rgba(255, 255, 255, 0.7)'
-          }
         }
       }
     };
@@ -227,8 +227,21 @@ __webpack_require__.r(__webpack_exports__);
     series: function series() {
       return [{
         name: "Iskopano",
-        data: this.getSeries(this.graph_data)
+        data: this.getSeries()
       }];
+    },
+    barHeight: function barHeight() {
+      if (screen.height < 864) {
+        return 'auto';
+      }
+
+      var i = 20;
+
+      if (screen.height >= 1050) {
+        i = 30;
+      }
+
+      return "".concat(screen.height / 5 - i, "px");
     }
   },
   components: {
@@ -240,7 +253,6 @@ __webpack_require__.r(__webpack_exports__);
 
       if (graph_data && graph_data !== 'undefined') {
         var that = this;
-        console.log(graph_data);
         graph_data.map(function (value, key) {
           data.push({
             x: that.defaultShifts[value.shift - 1].x,
@@ -415,19 +427,19 @@ var render = function () {
     _c("div", { staticClass: "card", attrs: { title: _vm.resource.name } }, [
       _c("div", {
         staticClass: "card-status-top",
-        class: _vm.current_flow ? "bg-success" : "bg-danger",
+        class: _vm.isComunication ? "bg-success" : "bg-danger",
       }),
       _vm._v(" "),
       _c(
         "div",
-        { staticClass: "card-body px-0 pb-0" },
+        { staticClass: "pt-2" },
         [
           _c("div", { staticClass: "d-flex px-3" }, [
             _c(
               "span",
               {
                 staticClass: "status-indicator",
-                class: _vm.current_flow
+                class: _vm.isComunication
                   ? "status-green status-indicator-animated"
                   : "status-red",
               },
@@ -441,20 +453,23 @@ var render = function () {
             ),
             _vm._v(" "),
             _c("h3", {
-              staticClass: "card-title ms-2 mt-2",
+              staticClass: "ms-2 mt-2 text-nowrap",
               domProps: { textContent: _vm._s(_vm.resource.name) },
             }),
             _vm._v(" "),
-            _c("div", { staticClass: "dropdown ms-2 mt-1" }, [
+            _c("div", { staticClass: "ms-2 mt-1" }, [
               _c(
-                "span",
+                "a",
                 {
-                  staticClass: "text-info ",
-                  attrs: {
-                    "data-bs-toggle": "dropdown",
-                    tabindex: "-1",
-                    "aria-label": "Prikaži Detalje",
-                    "aria-expanded": "false",
+                  staticClass: "text-info bg-green-lt",
+                  attrs: { href: "#", "aria-label": "Prikaži Detalje" },
+                  on: {
+                    click: function ($event) {
+                      $event.preventDefault()
+                      return _vm.$emit("show_details", {
+                        station: _vm.resource.id,
+                      })
+                    },
                   },
                 },
                 [
@@ -463,235 +478,53 @@ var render = function () {
                     {
                       attrs: {
                         xmlns: "http://www.w3.org/2000/svg",
-                        "xmlns:xlink": "http://www.w3.org/1999/xlink",
-                        "aria-hidden": "true",
-                        role: "img",
-                        width: "27",
-                        height: "27",
-                        preserveAspectRatio: "xMidYMid meet",
-                        viewBox: "0 0 1024 1024",
+                        width: "24",
+                        height: "24",
+                        viewBox: "0 0 24 24",
+                        "stroke-width": "2",
+                        stroke: "currentColor",
+                        fill: "none",
+                        "stroke-linecap": "round",
+                        "stroke-linejoin": "round",
                       },
                     },
                     [
                       _c("path", {
                         attrs: {
-                          d: "M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448s448-200.6 448-448S759.4 64 512 64zm0 708c-22.1 0-40-17.9-40-40s17.9-40 40-40s40 17.9 40 40s-17.9 40-40 40zm62.9-219.5a48.3 48.3 0 0 0-30.9 44.8V620c0 4.4-3.6 8-8 8h-48c-4.4 0-8-3.6-8-8v-21.5c0-23.1 6.7-45.9 19.9-64.9c12.9-18.6 30.9-32.8 52.1-40.9c34-13.1 56-41.6 56-72.7c0-44.1-43.1-80-96-80s-96 35.9-96 80v7.6c0 4.4-3.6 8-8 8h-48c-4.4 0-8-3.6-8-8V420c0-39.3 17.2-76 48.4-103.3C430.4 290.4 470 276 512 276s81.6 14.5 111.6 40.7C654.8 344 672 380.7 672 420c0 57.8-38.1 109.8-97.1 132.5z",
-                          fill: "currentColor",
+                          stroke: "none",
+                          d: "M0 0h24v24H0z",
+                          fill: "none",
                         },
+                      }),
+                      _vm._v(" "),
+                      _c("line", {
+                        attrs: { x1: "12", y1: "8", x2: "12.01", y2: "8" },
+                      }),
+                      _vm._v(" "),
+                      _c("rect", {
+                        attrs: {
+                          x: "4",
+                          y: "4",
+                          width: "16",
+                          height: "16",
+                          rx: "2",
+                        },
+                      }),
+                      _vm._v(" "),
+                      _c("polyline", {
+                        attrs: { points: "11 12 12 12 12 16 13 16" },
                       }),
                     ]
                   ),
                 ]
               ),
-              _vm._v(" "),
-              _c(
-                "div",
-                {
-                  staticClass:
-                    "dropdown-menu dropdown-menu-arrow dropdown-menu-end dropdown-menu-card",
-                },
-                [
-                  _c("div", { staticClass: "card" }, [
-                    _c("div", { staticClass: "card-header" }, [
-                      _c("div", {
-                        staticClass: "card-title",
-                        domProps: {
-                          textContent: _vm._s(
-                            "Detalji o Bageru " + _vm.resource.name
-                          ),
-                        },
-                      }),
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "card-body" }, [
-                      _c(
-                        "div",
-                        {
-                          staticClass: "mb-2",
-                          staticStyle: { "white-space": "nowrap" },
-                        },
-                        [
-                          _c(
-                            "svg",
-                            {
-                              staticClass: "icon me-2 text-muted",
-                              attrs: {
-                                xmlns: "http://www.w3.org/2000/svg",
-                                width: "24",
-                                height: "24",
-                                viewBox: "0 0 24 24",
-                                "stroke-width": "2",
-                                stroke: "currentColor",
-                                fill: "none",
-                                "stroke-linecap": "round",
-                                "stroke-linejoin": "round",
-                              },
-                            },
-                            [
-                              _c("path", {
-                                attrs: {
-                                  stroke: "none",
-                                  d: "M0 0h24v24H0z",
-                                  fill: "none",
-                                },
-                              }),
-                              _c("circle", {
-                                attrs: { cx: "12", cy: "11", r: "3" },
-                              }),
-                              _c("path", {
-                                attrs: {
-                                  d: "M17.657 16.657l-4.243 4.243a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 1 1 11.314 0z",
-                                },
-                              }),
-                            ]
-                          ),
-                          _vm._v(
-                            "\n                                        Lokacija:\n                                        "
-                          ),
-                          _c("strong", [
-                            _c("span", { staticClass: "flag flag-country-si" }),
-                            _vm._v(
-                              "\n                                            " +
-                                _vm._s(_vm.resource.excavation_field) +
-                                "\n                                        "
-                            ),
-                          ]),
-                        ]
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "div",
-                        {
-                          staticClass: "mb-2",
-                          staticStyle: { "white-space": "nowrap" },
-                        },
-                        [
-                          _c(
-                            "svg",
-                            {
-                              staticClass:
-                                "icon icon-tabler icon-tabler-currency-ripple",
-                              attrs: {
-                                xmlns: "http://www.w3.org/2000/svg",
-                                width: "24",
-                                height: "24",
-                                viewBox: "0 0 24 24",
-                                "stroke-width": "2",
-                                stroke: "currentColor",
-                                fill: "none",
-                                "stroke-linecap": "round",
-                                "stroke-linejoin": "round",
-                              },
-                            },
-                            [
-                              _c("path", {
-                                attrs: {
-                                  stroke: "none",
-                                  d: "M0 0h24v24H0z",
-                                  fill: "none",
-                                },
-                              }),
-                              _vm._v(" "),
-                              _c("circle", {
-                                attrs: { cx: "7", cy: "12", r: "3" },
-                              }),
-                              _vm._v(" "),
-                              _c("circle", {
-                                attrs: { cx: "17", cy: "7", r: "3" },
-                              }),
-                              _vm._v(" "),
-                              _c("circle", {
-                                attrs: { cx: "17", cy: "17", r: "3" },
-                              }),
-                              _vm._v(" "),
-                              _c("path", { attrs: { d: "M10 12h3l2 -2.5" } }),
-                              _vm._v(" "),
-                              _c("path", { attrs: { d: "M15 14.5l-2 -2.5" } }),
-                            ]
-                          ),
-                          _vm._v(
-                            "\n                                        Teorijski Kapacitet: "
-                          ),
-                          _c("strong", {
-                            domProps: {
-                              textContent: _vm._s(
-                                (_vm.resource.max_capacity
-                                  ? _vm.resource.max_capacity
-                                  : "---") + " m3"
-                              ),
-                            },
-                          }),
-                        ]
-                      ),
-                      _vm._v(" "),
-                      _c("div", [
-                        _c(
-                          "svg",
-                          {
-                            staticClass:
-                              "icon icon-tabler icon-tabler-file-description",
-                            attrs: {
-                              xmlns: "http://www.w3.org/2000/svg",
-                              width: "24",
-                              height: "24",
-                              viewBox: "0 0 24 24",
-                              "stroke-width": "2",
-                              stroke: "currentColor",
-                              fill: "none",
-                              "stroke-linecap": "round",
-                              "stroke-linejoin": "round",
-                            },
-                          },
-                          [
-                            _c("desc", [
-                              _vm._v(
-                                "Download more icon variants from https://tabler-icons.io/i/file-description"
-                              ),
-                            ]),
-                            _vm._v(" "),
-                            _c("path", {
-                              attrs: {
-                                stroke: "none",
-                                d: "M0 0h24v24H0z",
-                                fill: "none",
-                              },
-                            }),
-                            _vm._v(" "),
-                            _c("path", {
-                              attrs: { d: "M14 3v4a1 1 0 0 0 1 1h4" },
-                            }),
-                            _vm._v(" "),
-                            _c("path", {
-                              attrs: {
-                                d: "M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z",
-                              },
-                            }),
-                            _vm._v(" "),
-                            _c("path", { attrs: { d: "M9 17h6" } }),
-                            _vm._v(" "),
-                            _c("path", { attrs: { d: "M9 13h6" } }),
-                          ]
-                        ),
-                        _vm._v(
-                          "\n                                        O Bageru: "
-                        ),
-                        _c("p", {
-                          domProps: {
-                            textContent: _vm._s(_vm.resource.in_short),
-                          },
-                        }),
-                      ]),
-                    ]),
-                  ]),
-                ]
-              ),
             ]),
             _vm._v(" "),
-            _c("div", { staticClass: "ms-auto" }, [
+            _c("div", { staticClass: "ms-auto mt-2" }, [
               _c(
                 "a",
                 {
-                  staticClass: "btn btn-outline-dark w-100",
+                  staticClass: "btn w-100",
                   attrs: { href: "#" },
                   on: {
                     click: function ($event) {
@@ -755,7 +588,7 @@ var render = function () {
                     ]
                   ),
                   _vm._v(
-                    "\n                            Detaljnije\n                        "
+                    "\n                        Detaljnije\n                    "
                   ),
                 ]
               ),
@@ -764,8 +597,6 @@ var render = function () {
           _vm._v(" "),
           _c("chart", {
             attrs: {
-              graph_data: _vm.graph_data,
-              graph_title: "Iskopano od 07:00 : " + _vm.totalFlow + " m3",
               update_chart: _vm.update_chart,
               resource_id: _vm.resource.id,
             },
@@ -774,53 +605,221 @@ var render = function () {
         1
       ),
       _vm._v(" "),
-      _c("div", { staticClass: "card-body" }, [
-        _vm._m(0),
-        _vm._v(" "),
-        _c("div", { staticClass: "d-flex align-items-center" }, [
-          _c("div", { staticClass: "col-auto" }, [
-            _c(
-              "svg",
-              {
-                staticClass: "icon icon-tabler icon-tabler-currency-ripple",
-                attrs: {
-                  xmlns: "http://www.w3.org/2000/svg",
-                  width: "24",
-                  height: "24",
-                  viewBox: "0 0 24 24",
-                  "stroke-width": "2",
-                  stroke: "currentColor",
-                  fill: "none",
-                  "stroke-linecap": "round",
-                  "stroke-linejoin": "round",
+      _c(
+        "div",
+        {
+          staticClass: "card-footer pt-1 pb-1",
+          class: { "bg-red-lt": !_vm.isComunication },
+        },
+        [
+          _vm._m(0),
+          _vm._v(" "),
+          _c("div", { staticClass: "d-flex align-items-center" }, [
+            _c("div", { staticClass: "col-auto" }, [
+              _c(
+                "svg",
+                {
+                  staticClass: "icon icon-tabler icon-tabler-currency-ripple",
+                  attrs: {
+                    xmlns: "http://www.w3.org/2000/svg",
+                    width: "24",
+                    height: "24",
+                    viewBox: "0 0 24 24",
+                    "stroke-width": "2",
+                    stroke: "currentColor",
+                    fill: "none",
+                    "stroke-linecap": "round",
+                    "stroke-linejoin": "round",
+                  },
                 },
-              },
-              [
-                _c("path", {
-                  attrs: { stroke: "none", d: "M0 0h24v24H0z", fill: "none" },
-                }),
-                _vm._v(" "),
-                _c("circle", { attrs: { cx: "7", cy: "12", r: "3" } }),
-                _vm._v(" "),
-                _c("circle", { attrs: { cx: "17", cy: "7", r: "3" } }),
-                _vm._v(" "),
-                _c("circle", { attrs: { cx: "17", cy: "17", r: "3" } }),
-                _vm._v(" "),
-                _c("path", { attrs: { d: "M10 12h3l2 -2.5" } }),
-                _vm._v(" "),
-                _c("path", { attrs: { d: "M15 14.5l-2 -2.5" } }),
-              ]
-            ),
+                [
+                  _c("path", {
+                    attrs: { stroke: "none", d: "M0 0h24v24H0z", fill: "none" },
+                  }),
+                  _vm._v(" "),
+                  _c("circle", { attrs: { cx: "7", cy: "12", r: "3" } }),
+                  _vm._v(" "),
+                  _c("circle", { attrs: { cx: "17", cy: "7", r: "3" } }),
+                  _vm._v(" "),
+                  _c("circle", { attrs: { cx: "17", cy: "17", r: "3" } }),
+                  _vm._v(" "),
+                  _c("path", { attrs: { d: "M10 12h3l2 -2.5" } }),
+                  _vm._v(" "),
+                  _c("path", { attrs: { d: "M15 14.5l-2 -2.5" } }),
+                ]
+              ),
+            ]),
+            _vm._v(" "),
+            _c("div", {
+              staticClass: "h1 mb-0 ms-3 col",
+              domProps: { textContent: _vm._s(_vm.current_flow + " m3") },
+            }),
+            _vm._v(" "),
+            _vm.isComunication
+              ? _c("div", { staticClass: "me-auto" }, [
+                  _c(
+                    "a",
+                    {
+                      staticClass: "d-inline-flex align-items-center lh-1",
+                      class: _vm.isComunication
+                        ? "text-success"
+                        : "text-danger",
+                      attrs: { href: "#" },
+                      on: {
+                        click: function ($event) {
+                          $event.preventDefault()
+                          return _vm.toggleStatuses.apply(null, arguments)
+                        },
+                      },
+                    },
+                    [
+                      _c(
+                        "svg",
+                        {
+                          attrs: {
+                            xmlns: "http://www.w3.org/2000/svg",
+                            width: "24",
+                            height: "24",
+                            viewBox: "0 0 24 24",
+                            "stroke-width": "2",
+                            stroke: "currentColor",
+                            fill: "none",
+                            "stroke-linecap": "round",
+                            "stroke-linejoin": "round",
+                          },
+                        },
+                        [
+                          _c("path", {
+                            attrs: {
+                              stroke: "none",
+                              d: "M0 0h24v24H0z",
+                              fill: "none",
+                            },
+                          }),
+                          _vm._v(" "),
+                          _c("polyline", {
+                            attrs: { points: "7 7 12 12 17 7" },
+                          }),
+                          _vm._v(" "),
+                          _c("polyline", {
+                            attrs: { points: "7 13 12 18 17 13" },
+                          }),
+                        ]
+                      ),
+                    ]
+                  ),
+                ])
+              : _c("div", { staticClass: "me-auto" }, [
+                  _c(
+                    "svg",
+                    {
+                      staticClass: "core",
+                      attrs: {
+                        xmlns: "http://www.w3.org/2000/svg",
+                        "aria-hidden": "true",
+                        role: "img",
+                        width: "24",
+                        height: "24",
+                        preserveAspectRatio: "xMidYMid meet",
+                        viewBox: "0 0 36 36",
+                      },
+                    },
+                    [
+                      _c("circle", {
+                        staticClass: "clr-i-solid clr-i-solid-path-1",
+                        attrs: {
+                          cx: "18",
+                          cy: "29.54",
+                          r: "3",
+                          fill: "currentColor",
+                        },
+                      }),
+                      _c("path", {
+                        staticClass: "clr-i-solid clr-i-solid-path-2",
+                        attrs: {
+                          fill: "currentColor",
+                          d: "m29.18 17.71l.11-.17a1.51 1.51 0 0 0-.47-2.1A20.57 20.57 0 0 0 18 12.37c-.56 0-1.11 0-1.65.07l3.21 3.21a17.41 17.41 0 0 1 7.6 2.52a1.49 1.49 0 0 0 2.02-.46Z",
+                        },
+                      }),
+                      _c("path", {
+                        staticClass: "clr-i-solid clr-i-solid-path-3",
+                        attrs: {
+                          fill: "currentColor",
+                          d: "M32.76 9.38a27.9 27.9 0 0 0-22.58-3.11l2.63 2.63a24.68 24.68 0 0 1 18.29 3.22a1.49 1.49 0 0 0 2-.46l.11-.17a1.51 1.51 0 0 0-.45-2.11Z",
+                        },
+                      }),
+                      _c("path", {
+                        staticClass: "clr-i-solid clr-i-solid-path-4",
+                        attrs: {
+                          fill: "currentColor",
+                          d: "m3 4.75l3.1 3.1a27.28 27.28 0 0 0-2.92 1.57a1.51 1.51 0 0 0-.48 2.11l.11.17a1.49 1.49 0 0 0 2 .46a24.69 24.69 0 0 1 3.67-1.9l3.14 3.14a20.63 20.63 0 0 0-4.53 2.09a1.51 1.51 0 0 0-.46 2.1l.11.17a1.49 1.49 0 0 0 2 .46A17.46 17.46 0 0 1 14.25 16l3.6 3.6a13.39 13.39 0 0 0-6.79 1.93a1.5 1.5 0 0 0-.46 2.09l.1.16a1.52 1.52 0 0 0 2.06.44a10.2 10.2 0 0 1 9-.7L29 30.75l1.41-1.41l-26-26Z",
+                        },
+                      }),
+                      _c("path", {
+                        attrs: { fill: "none", d: "M0 0h36v36H0z" },
+                      }),
+                    ]
+                  ),
+                ]),
           ]),
-          _vm._v(" "),
-          _c("div", {
-            staticClass: "h1 mb-0 ms-3 col",
-            domProps: { textContent: _vm._s(_vm.current_flow + " m3") },
-          }),
-          _vm._v(" "),
-          _c("div", { staticClass: "me-auto" }),
-        ]),
-      ]),
+        ]
+      ),
+      _vm._v(" "),
+      _vm.show_status
+        ? _c("div", { staticClass: "row m-0" }, [
+            _c("div", {
+              staticClass: "col text-center border",
+              class: { "bg-success-lt border-success": _vm.statuses[6] },
+              domProps: {
+                textContent: _vm._s(_vm.statuses[6] ? "24VDC OK" : "24VDC"),
+              },
+            }),
+            _vm._v(" "),
+            _c("div", {
+              staticClass: "col text-center border",
+              class: { "bg-success-lt border-success": _vm.statuses[7] },
+              domProps: {
+                textContent: _vm._s(_vm.statuses[7] ? "Radi" : "Ne radi"),
+              },
+            }),
+            _vm._v(" "),
+            _c(
+              "div",
+              {
+                staticClass: "col text-center border",
+                class: { "bg-success-lt border-success": _vm.statuses[5] },
+              },
+              [_vm._v("Kalibracija")]
+            ),
+            _vm._v(" "),
+            _c("div", { staticClass: "w-100" }),
+            _vm._v(" "),
+            _c("div", {
+              staticClass: "col text-center border",
+              class: { "bg-success-lt border-success": _vm.statuses[4] },
+              domProps: {
+                textContent: _vm._s(_vm.statuses[4] ? "UPS 24V OK" : "UPS 24V"),
+              },
+            }),
+            _vm._v(" "),
+            _c(
+              "div",
+              {
+                staticClass: "col text-center border",
+                class: { "bg-danger-lt border-danger": _vm.statuses[3] },
+              },
+              [_vm._v("Ups Alarm")]
+            ),
+            _vm._v(" "),
+            _c("div", {
+              staticClass: "col text-center border",
+              class: { "bg-success-lt border-success": _vm.statuses[2] },
+              domProps: {
+                textContent: _vm._s(_vm.statuses[2] ? "UPS Bat OK" : "UPS Bat"),
+              },
+            }),
+          ])
+        : _vm._e(),
     ]),
   ])
 }
@@ -860,7 +859,11 @@ var render = function () {
     [
       _c("apexchart", {
         ref: "chart",
-        attrs: { options: _vm.chartOptions, series: _vm.series },
+        attrs: {
+          options: _vm.chartOptions,
+          series: _vm.series,
+          height: _vm.barHeight,
+        },
       }),
     ],
     1

@@ -16,11 +16,22 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
          \App\Models\User::factory()->create([
-        'name' => 'xxx',
-        'email' => 'xxx@xxx.xxx',
-        'email_verified_at' => now(),
-        'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
-         'admin_since' => Carbon::now()
-    ]);
+            'name' => 'TV',
+            'email' => 'tv@xxx.xxx',
+            'email_verified_at' => now(),
+            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+            // 'admin_since' => Carbon::now()
+        ]);
+         \App\Models\User::factory()->create([
+            'name' => 'xxx',
+            'email' => 'xxx@xxx.xxx',
+            'email_verified_at' => now(),
+            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+             'admin_since' => Carbon::now()
+        ]);
+
+         $this->call(ExcavationFieldSeeder::class);
+         $this->call(RodentTypeSeeder::class);
+         $this->call(RodentSeeder::class);
     }
 }

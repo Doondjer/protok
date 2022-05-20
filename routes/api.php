@@ -18,9 +18,17 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 Route::middleware('auth:sanctum')->group(function(){
+
+    Route::post('export', [\App\Http\Controllers\AdminsController::class, 'export'])->name('export');
+
     Route::get('/chart/station/{station}', [\App\Http\Controllers\ChartsController::class, 'station'])->name('chart.station.api');
     Route::get('/table/station', [\App\Http\Controllers\ChartsController::class, 'table'])->name('table.station.api');
     Route::get('/api/panel', [\App\Http\Controllers\FLowsController::class, 'apiData'])->name('panel.api');
+
+
+// OVo treba u admin middleware
+    Route::post('/rodent-type/{rodent_type}/attribute', [\App\Http\Controllers\RodentAttributesController::class, 'store'])->name('rodent_attribute.store.api');
+    Route::delete('/rodent-type/{rodent_type}/attribute/{attribute}', [\App\Http\Controllers\RodentAttributesController::class, 'destroy'])->name('rodent_attribute.destroy.api');
 });
 
 

@@ -25,6 +25,7 @@
         "apexcharts": "^3.35.0",
         "chart.js": "^3.7.1",
         "laravel-echo": "^1.11.7",
+        "litepicker": "^2.0.12",
         "pusher-js": "^7.1.0-beta",
         "v-calendar": "^2.4.1",
         "vue": "^2.6.14",
