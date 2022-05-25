@@ -39,10 +39,10 @@ class AppServiceProvider extends ServiceProvider
 
             $config = config('app_settings');
 
-            if(Schema::hasTable('configuration')) {
+            if(Schema::hasTable('configuration') && Schema::hasTable('rodents')) {
                 $config['values'] = array_merge(config('app_settings.values'), $configuration->pluck('config_value', 'config_name')->toArray(), ['panel_resources' =>  RodentResource::collection($rodents)], ['nb_rodents' =>  RodentResource::collection($rodents)->count()]);
             } else {
-                Log::error('Table Settings does not exists! Did you migrate properly?');
+                Log::error('Table "settings" or "rodents" does not exists! Did you migrate properly?');
             }
 
             return $config;

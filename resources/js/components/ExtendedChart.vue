@@ -111,7 +111,10 @@ export default {
                 },
                 title: {
                     text: 'Protok Bagera u m3/h',
-                    align: 'left'
+                    align: 'left',
+                    style: {
+                        color: 'rgba(255, 255, 255, 0.7)'
+                    },
                 },
                 markers: {
                     size: 3,
@@ -171,7 +174,7 @@ export default {
                     data: data.data
                 },
             ];
-
+console.log(data.series);
             this.barSeries = data.series;
 
             this.$refs.chart.addXaxisAnnotation({

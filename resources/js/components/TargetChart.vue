@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="bar-container">
         <apexchart ref="chart" :options="chartOptions" :series="series" :height="barHeight"></apexchart>
     </div>
 </template>
@@ -14,14 +14,18 @@ export default {
         'update_chart.data.graphData': {
             handler:function(newVal) {
 
-
-                    this.$refs.chart.updateOptions({series: [{
+                this.$nextTick(() => {
+                    this.$refs.chart.updateOptions({
+                        series: [{
                             name: "Iskopano",
                             data: this.getSeries(newVal[this.resource_id])
                         }]
                     })
+                })
             },
-            deep:true    },
+            immediate: true,
+            deep: true
+        },
         'update_chart.data.panelFlows': {
             handler:function(newVal) {
 
@@ -35,16 +39,19 @@ export default {
                     })
                 }
 
-                this.$refs.chart.updateOptions({
-                    title: {
-                        text: `Iskopano od 07:00 : ${total} m3`,
-                        style: {
-                            color:  'rgba(255, 255, 255, 0.7)'
-                        },
-                    }
+                this.$nextTick(() => {
+                    this.$refs.chart.updateOptions({
+                        title: {
+                            text: `Iskopano od 07:00 : ${total.toFixed(1)} m3`,
+                            style: {
+                                color: 'rgba(255, 255, 255, 0.7)'
+                            },
+                        }
+                    })
                 })
             },
-            deep:true    },
+            immediate: true  ,
+            deep: true    },
 
     },
     data() {

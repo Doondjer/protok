@@ -19,94 +19,6 @@ use ModbusTcpClient\Utils\Endian;
 */
 Route::get('/test', function (){
 
-    $return = [];
-    $ip = '192.168.1.99';
-    $port = 503;
-    $unitId = 2;
-    $startAddress = 0;
-    $quantity = 4;
-  //  $endianess = Endian::BIG_ENDIAN;
-    $endianess = Endian::BIG_ENDIAN;
-    Endian::$defaultEndian = $endianess;
-
-
-    $connection = BinaryStreamConnection::getBuilder()
-        ->setPort($port)
-        ->setHost($ip)
-        ->setConnectTimeoutSec(1.5) // timeout when establishing connection to the server
-        ->setWriteTimeoutSec(0.5) // timeout when writing/sending packet to the server
-        ->setReadTimeoutSec(1.0) // timeout when waiting response from server
-        ->build();
-
-
-    $packet = new ReadHoldingRegistersRequest($startAddress, $quantity, $unitId);
-
-    \Illuminate\Support\Facades\Log::info('Packet to be sent (in hex): ' . $packet->toHex());
-
-    $result = [];
-    try {
-        $binaryData = $connection->connect()->sendAndReceive($packet);
-
-        \Illuminate\Support\Facades\Log::info('Binary received (in hex):   ' . unpack('H*', $binaryData)[1]);
-
-        $response = ResponseFactory::parseResponseOrThrow($binaryData)->withStartAddress($startAddress);
-        $result = [];
-        foreach ($response as $address => $word) {
-
-            $doubleWord = isset($response[$address + 1]) ? $response->getDoubleWordAt($address) : null;
-
-            $quadWord = null;
-            if (isset($response[$address + 3])) {
-                $quadWord = $response->getQuadWordAt($address);
-                try {
-                    $UInt64 = $quadWord->getUInt64(); // some data can not be converted to unsigned 64bit int due PHP memory limitations
-                } catch (\Exception $e) {
-                    $UInt64 = '-';
-                }
-                try {
-                    $Int64 = $quadWord->getInt64();
-                } catch (\Exception $e) {
-                    $Int64 = '-';
-                }
-                try {
-                    $double = $quadWord->getDouble();
-                } catch (\Exception $e) {
-                    $double = '-';
-                }
-
-            }
-
-            $highByteAsInt = $word->getHighByteAsInt();
-            $lowByteAsInt = $word->getLowByteAsInt();
-
-
-                    $result[$address] = [
-                        'highByte' => '0x' . str_pad(dechex($highByteAsInt), 2, '0', STR_PAD_LEFT) . ' / ' . $highByteAsInt . ' / "&#' . $highByteAsInt . ';"',
-                        'lowByte' => '0x' . str_pad(dechex($lowByteAsInt), 2, '0', STR_PAD_LEFT) . ' / ' . $lowByteAsInt . ' / "&#' . $lowByteAsInt . ';"',
-                        'highByteBits' => sprintf('%08d', decbin($highByteAsInt)),
-                        'lowByteBits' => sprintf('%08d', decbin($lowByteAsInt)),
-                        'int16' => $word->getInt16($endianess),
-                        'UInt16' => $word->getUInt16($endianess),
-                        'int32' => $doubleWord ? $doubleWord->getInt32() : null,
-                        'UInt32' => $doubleWord ? $doubleWord->getUInt32() : null,
-                        'float' => $doubleWord ? $doubleWord->getFloat() : null,
-                        'double' => $quadWord ? $double : null,
-                        'Int64' => $quadWord ? $Int64 : null,
-                        'UInt64' => $quadWord ? $UInt64 : null,
-                    ];
-
-        }
-
-        dd($result);
-
-    } catch (Exception $exception) {
-
-        report($exception);
-    } finally {
-        $connection->close();
-    }
-dd($return);
-
 });
 
 Route::middleware('auth')->group(function(){
@@ -116,7 +28,11 @@ Route::middleware('auth')->group(function(){
 });
 
 Route::middleware('admin')->prefix('admin')->group(function() {
+    Route::get('maintenance', [\App\Http\Controllers\AdminsController::class, 'maintenance'])->name('admin.maintenance');
 
+    Route::post('shut/down', [\App\Http\Controllers\AdminsController::class, 'down'])->name('admin.maintenance.down');
+
+    Route::get('bring/up', [\App\Http\Controllers\AdminsController::class, 'up'])->name('admin.maintenance.up');
 
     Route::resource('rodent', '\App\Http\Controllers\RodentsController')->except(['show']);
     Route::delete('rodent-type/{rodent_type}/image', [\App\Http\Controllers\RodentTypesController::class, 'deleteImage'])->name('rodent_type.delete.image');

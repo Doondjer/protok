@@ -36,7 +36,6 @@ class FlowExport implements FromQuery, WithHeadings
      */
     public function query()
     {
-
         return Flow::query()->select(DB::raw('id, ROUND(ValueVrednost * 3600, 1) as flow, DatumVreme as date_time'))
                     ->where('StationId', $this->rodentId)
                     ->whereRaw("CAST(DatumVreme as datetime) >= '" . Carbon::create($this->start) . "'")

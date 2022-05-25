@@ -16,7 +16,7 @@
             <div class="col-12 col-lg-auto mt-3 mt-lg-0">
                 <ul class="list-inline list-inline-dots mb-0">
                     <li class="list-inline-item1">
-                        Razvijeno od strane 4BTO Sistema Polje "C" 2022 - {{ \Carbon\Carbon::now()->year }}
+                        Razvijeno od strane 4BTO Sistema Polje "B" 2022 - {{ \Carbon\Carbon::now()->year }}
                         <a href="{{ env('APP_URL') }}" class="link-secondary">Merenje Protoka na Bagerima</a>
                     </li>
                     <li class="list-inline-item1">

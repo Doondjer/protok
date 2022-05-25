@@ -1,4 +1,5 @@
 import * as API from "./API";
+import * as BASE from './BASE';
 
 export default {
     async getPanelData(){
@@ -24,5 +25,12 @@ export default {
     async deleteAttribute(slug, id) {
         await API.apiClient.get("/sanctum/csrf-cookie");
         return API.apiClient.delete(`/rodent-type/${slug}/attribute/${id}`);
+    },
+    async webSocketEvent(url, payload) {
+        await API.apiClient.get("/sanctum/csrf-cookie");
+        return BASE.apiClient.post(url,  payload);
+    },
+    webSocketUrl(url) {
+        return BASE.apiClient.get(url);
     },
 }

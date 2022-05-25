@@ -2,8 +2,8 @@
 
 return [
     'values' => [
-        'favicon_url' => env('APP_URL') . '/favicon.ico',
-        'logo_url' => env('APP_URL') . '/images/kolubara.png',
+        'favicon_url' => '/favicon.ico',
+        'logo_url' => '/images/kolubara.png',
         'app_name' => env('APP_NAME'),
         'app_email' => env('MAIL_FROM_ADDRESS'),
         'flow_paginate_allowed' => 1000,
@@ -16,11 +16,11 @@ return [
 
         'site' => [
             'favicon_url' => [
-                'rules' => 'nullable|active_url',
+                'rules' => 'nullable|string|max:70',
                 'type' => 'text'
             ],
             'logo_url' => [
-                'rules' => 'nullable|active_url',
+                'rules' => 'nullable|string|max:70',
                 'type' => 'text'
             ],
             'app_name' => [

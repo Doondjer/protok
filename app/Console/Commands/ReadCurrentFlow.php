@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Illuminate\Console\Command;
 
 
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use ModbusTcpClient\Network\BinaryStreamConnection;
@@ -44,7 +45,7 @@ class ReadCurrentFlow extends Command
      * Modbus Server Data Length
      * @var int
      */
-    private $quantity = 4;
+    private $quantity = 6;
 
     /**
      * Modbus Server Endian Type
@@ -89,7 +90,7 @@ class ReadCurrentFlow extends Command
 
         $packet = new ReadHoldingRegistersRequest($this->startAddress, $this->quantity, $this->unitId);
 
-        Log::info('Packet to be sent (in hex): ' . $packet->toHex());
+       $this->info('Packet to be sent (in hex): ' . $packet->toHex());
 
         try {
             $binaryData = $connection->connect()->sendAndReceive($packet);
@@ -97,6 +98,7 @@ class ReadCurrentFlow extends Command
             Log::info('Binary received (in hex):   ' . unpack('H*', $binaryData)[1]);
 
             $response = ResponseFactory::parseResponseOrThrow($binaryData)->withStartAddress($this->startAddress);
+          //  dd($response);
 
             foreach ($response as $address => $word) {
 
@@ -104,12 +106,18 @@ class ReadCurrentFlow extends Command
 
                 switch ($address){
                     case 0:
-                        $this->currentFlow['rodent_id'] =  $word->getUInt16();
+                        $this->currentFlow['next_rodent_id'] =  $word->getUInt16();
                         break;
                     case 1:
+                        $this->currentFlow['rodent_id'] =  $word->getUInt16();
+                        break;
+                    case 2:
                         $this->currentFlow['current_flow'] = $doubleWord ? round($doubleWord->getFloat($this->endianess) * 3600,1): null;
                         break;
                     case 3:
+                        $this->currentFlow['date_time'] = sprintf('%08d', decbin($word->getLowByteAsInt()));
+                        break;
+                    case 4:
                         $this->currentFlow['status'] = sprintf('%08d', decbin($word->getLowByteAsInt()));
                         break;
                     default:
@@ -123,15 +131,24 @@ class ReadCurrentFlow extends Command
             $connection->close();
         }
        // Cache::forget('rodent:id');
-        $this->currentFlow['rodent_id'] = 5;
+
+    /*
+        $this->currentFlow['next_rodent_id'] = 10;
+        $this->currentFlow['rodent_id'] = 9;
         $this->currentFlow['current_flow'] = 5000;
-        $this->currentFlow['status'] = 00101010;
+        $this->currentFlow['status'] = '11111111';
+        */     dump($this->currentFlow);
 
-        $this->info('Rodent id in cache: ' . Cache::get('rodent:id') ?: null);
-        $this->info('Current Rodent id: ' . $this->currentFlow['rodent_id']);
+        if($this->currentFlow && ($this->currentFlow['next_rodent_id'] - Cache::get('rodent:id') > 1) && $this->currentFlow['next_rodent_id'] != 1) {
 
+            $this->dispatchBlankStatus($this->currentFlow['next_rodent_id'] - 1);
+        }
+        if($this->currentFlow && $this->currentFlow['next_rodent_id'] == 1 && Cache::get('rodent_id') != config('app_settings.values.nb_rodents')) {
+
+            $this->dispatchBlankStatus(config('app_settings.values.nb_rodents'));
+        }
         // Ukoliko je preskocio bager dok je iscitani manji od ukupnog broja bagera
-        if(Cache::get('rodent:id') && $this->currentFlow['rodent_id'] && ($this->currentFlow['rodent_id'] - Cache::get('rodent:id')) > 1) {
+      /*  if(Cache::get('rodent:id') && $this->currentFlow && $this->currentFlow['rodent_id'] && ($this->currentFlow['rodent_id'] - Cache::get('rodent:id')) > 1) {
 
                 for ($rodentToSkip = Cache::get('rodent:id') + 1; $rodentToSkip < $this->currentFlow['rodent_id']; $rodentToSkip++){
                     $this->dispatchBlankStatus($rodentToSkip);
@@ -139,8 +156,8 @@ class ReadCurrentFlow extends Command
         }
 
         if (
-            (Cache::get('rodent:id') > $this->currentFlow['rodent_id'] && Cache::get('rodent:id') < config('app_settings.values.nb_rodents')) // Ukoliko je preskocio bager koji je manji od 12 a iscitao bager veci od 1
-            || Carbon::now()->diffInSeconds(Cache::get('rodent:time')) > config('app_settings.values.max_rodents_scan_cycle') // Ako ne vidi nijedan bager tj receive u db4 ostane na prethodno vidjenom bageru
+            ($this->currentFlow && Cache::get('rodent:id') > $this->currentFlow['rodent_id'] && Cache::get('rodent:id') < config('app_settings.values.nb_rodents')) // Ukoliko je preskocio bager koji je manji od 12 a iscitao bager veci od 1
+            || Carbon::now()->diffInSeconds(Cache::get('rodent:time', Carbon::now())) > config('app_settings.values.max_rodents_scan_cycle') // Ako ne vidi nijedan bager tj receive u db4 ostane na prethodno vidjenom bageru
         ) {
 
             for ($rodentToSkip = Cache::get('rodent:id') + 1; $rodentToSkip <= 12; $rodentToSkip++) {
@@ -148,15 +165,16 @@ class ReadCurrentFlow extends Command
                 $this->dispatchBlankStatus($rodentToSkip);
             }
 
-            if($this->currentFlow['rodent_id'] != 1){
+            if($this->currentFlow && $this->currentFlow['rodent_id'] != 1){
                 for ($rodentToSkip = 1; $rodentToSkip < $this->currentFlow['rodent_id']; $rodentToSkip++) {
                     $this->info('skiped '.$rodentToSkip);
                     $this->dispatchBlankStatus($rodentToSkip);
                 }
             }
-        }
+        }*/
 
-        Cache::put('rodent:id', $this->currentFlow['rodent_id']);
+        Cache::put('rodent:id', Arr::get($this->currentFlow, 'rodent_id', null));
+        Cache::put('next:rodent:id', Arr::get($this->currentFlow, 'next_rodent_id', null));
         Cache::put('rodent:time', Carbon::now());
 
         NewCurrentFlow::dispatch($this->currentFlow);

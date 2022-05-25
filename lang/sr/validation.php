@@ -168,5 +168,7 @@ return [
         'value'                 => 'vrednost',
         'unit'                  => 'merna jedinica',
         'rodent_type'           => 'tip bagera',
+        'date_start'            => 'datum početka',
+        'date_end'              => 'datum kraja',
     ],
 ];

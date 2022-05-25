@@ -2,7 +2,10 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\Response;
 
 class ExportRequest extends FormRequest
 {
@@ -25,8 +28,8 @@ class ExportRequest extends FormRequest
     {
 
         return [
-            'date_start' => 'required|date|before_or_equal:date_end',
-            'date_end' => 'required|date|before_or_equal:today',
+            'date_start' => 'required|date|before:date_end',
+            'date_end' => 'required|date',
             'rodent_id' => 'required|numeric|exists:rodents,id',
         ];
     }

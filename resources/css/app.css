@@ -138,19 +138,10 @@ body.fullscreen .panel-header {
         transform: scale(0);
     }
 
-    30% {
-        opacity: 1;
-        transform: scale(1.2);
-    }
-
-    60% {
-        opacity: 1;
-        transform: scale(1.5);
-    }
-
     100% {
-        opacity: 0;
+        opacity: 1;
         transform: scale(1.5);
     }
+
 }
 

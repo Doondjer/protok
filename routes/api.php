@@ -26,9 +26,12 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::get('/api/panel', [\App\Http\Controllers\FLowsController::class, 'apiData'])->name('panel.api');
 
 
-// OVo treba u admin middleware
-    Route::post('/rodent-type/{rodent_type}/attribute', [\App\Http\Controllers\RodentAttributesController::class, 'store'])->name('rodent_attribute.store.api');
-    Route::delete('/rodent-type/{rodent_type}/attribute/{attribute}', [\App\Http\Controllers\RodentAttributesController::class, 'destroy'])->name('rodent_attribute.destroy.api');
-});
+
+    Route::middleware('admin')->group(function() {
+
+        Route::post('/rodent-type/{rodent_type}/attribute', [\App\Http\Controllers\RodentAttributesController::class, 'store'])->name('rodent_attribute.store.api');
+        Route::delete('/rodent-type/{rodent_type}/attribute/{attribute}', [\App\Http\Controllers\RodentAttributesController::class, 'destroy'])->name('rodent_attribute.destroy.api');
+    });
+ });
 
 

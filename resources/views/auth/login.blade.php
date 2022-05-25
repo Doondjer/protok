@@ -11,7 +11,7 @@
 @endsection
 
 @section('main-body-content')
-    <div class="page page-center">
+    <div class="page page-center" id="app">
         @if(isset($errors) && array_diff($errors->getBag('default')->keys(),['email','password']))
             <div class="container-xl">
                 <div class="alert alert-important alert-danger alert-dismissible" role="alert">
@@ -39,7 +39,7 @@
                 <div class="text-center mb-4">
                     <img class="mb-4" src="{{ config('app_settings.values.logo_url') }}" alt="{{ config('app_settings.values.app_name') }}" width="72" height="72">
                     <h1 class="h3 mb-3 font-weight-normal">Merenje Protoka</h1>
-                    <p>Ova aplikacija je razvijena od strane 4Bto Sistema, i bla bla bla nesto nakenjamo</p>
+                    <p>Ova aplikacija je razvijena od strane 4Bto Sistema Polja "B".</p>
                 </div>
                     <div class="mb-3">
                         <div class="form-floating mb-3">
@@ -58,6 +58,19 @@
                         </div>
                     </div>
                     <div class="mb-2">
+                        {{--<div class="alert alert-info alert-dismissible" role="alert">
+                            <div class="d-flex">
+                                <div>
+                                    <!-- Download SVG icon from http://tabler-icons.io/i/info-circle -->
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon alert-icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><desc>Download more icon variants from https://tabler-icons.io/i/info-circle</desc><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><circle cx="12" cy="12" r="9"></circle><line x1="12" y1="8" x2="12.01" y2="8"></line><polyline points="11 12 12 12 12 16 13 16"></polyline></svg>
+                                </div>
+                                <div>
+
+                                    <div class="text-muted">Login: tv@rbkolubara.rs / password</div>
+                                </div>
+                            </div>
+                            <a class="btn-close" data-bs-dismiss="alert" aria-label="close"></a>
+                        </div>--}}
                         <label class="form-check">
                             <input type="checkbox" name="remember" checked="checked" class="form-check-input">
                             <span class="form-check-label">Zapamti me na ovom uređaju</span>

@@ -15,6 +15,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var v_calendar_lib_components_date_picker_umd__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(v_calendar_lib_components_date_picker_umd__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _core_Errors__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./../core/Errors */ "./resources/js/core/Errors.js");
 /* harmony import */ var _services_ApiService__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../services/ApiService */ "./resources/js/services/ApiService.js");
+/* harmony import */ var _utils_helpers__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../utils/helpers */ "./resources/js/utils/helpers.js");
 //
 //
 //
@@ -90,6 +91,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+
 
 
 
@@ -128,7 +132,8 @@ __webpack_require__.r(__webpack_exports__);
       })["catch"](this.onError);
     },
     onError: function onError(error) {
-      console.dir(error);
+      var errors = String.fromCharCode.apply(null, new Uint8Array(error.response.data));
+      this.errors.record(JSON.parse(errors));
     }
   }
 });
@@ -174,7 +179,7 @@ var Errors = /*#__PURE__*/function () {
   }, {
     key: "record",
     value: function record(errors) {
-      this.errors = errors;
+      this.errors = errors.errors;
     }
   }, {
     key: "any",
@@ -202,6 +207,54 @@ var Errors = /*#__PURE__*/function () {
 }();
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Errors);
+
+/***/ }),
+
+/***/ "./resources/js/utils/helpers.js":
+/*!***************************************!*\
+  !*** ./resources/js/utils/helpers.js ***!
+  \***************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "dispatchError": () => (/* binding */ dispatchError),
+/* harmony export */   "getError": () => (/* binding */ getError)
+/* harmony export */ });
+/* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! sweetalert2 */ "./node_modules/sweetalert2/dist/sweetalert2.all.js");
+/* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(sweetalert2__WEBPACK_IMPORTED_MODULE_0__);
+
+var getError = function getError(error) {
+  var errorMessage = "Oups! Nešto nije uredu, molim pokušajte ponovo.";
+
+  if (!error.response) {
+    console.log('API server error! Response does not exists'); //console.error(error);
+
+    return errorMessage;
+  }
+
+  if (true) {
+    console.error(error.response.data);
+    console.error(error.response.status);
+    console.error(error.response.headers);
+  }
+
+  if (error.response.data && error.response.data.errors) {
+    console.log(error.response.data.errors);
+    return error.response.data.errors;
+  }
+
+  if (error.response.data && error.response.data.message) {
+    return error.response.data.message;
+  }
+
+  return errorMessage;
+};
+var dispatchError = function dispatchError(error) {
+  sweetalert2__WEBPACK_IMPORTED_MODULE_0___default().fire(error.response.data.message, '', 'error');
+  return error.response.data.errors;
+};
 
 /***/ }),
 
@@ -21401,18 +21454,13 @@ var render = function () {
       { staticClass: "col" },
       [
         _c("DatePicker", {
-          staticClass: "input-group input-group-flat",
-          class: { "form-input-danger": _vm.errors.has("date_start") },
+          staticClass: "input-group",
+          class: { "is-invalid": _vm.errors.has("date_start") },
           attrs: {
             mode: "datetime",
             "model-config": _vm.modelConfig,
             "max-date": new Date(),
             timezone: "UTC",
-          },
-          on: {
-            input: function ($event) {
-              return _vm.errors.clear("date_start")
-            },
           },
           scopedSlots: _vm._u([
             {
@@ -21421,7 +21469,7 @@ var render = function () {
                 var inputValue = ref.inputValue
                 var inputEvents = ref.inputEvents
                 return [
-                  _c("span", { staticClass: "input-group-text" }, [
+                  _c("span", { staticClass: "btn" }, [
                     _c(
                       "svg",
                       {
@@ -21485,7 +21533,7 @@ var render = function () {
                     _vm._g(
                       {
                         staticClass: "form-control",
-                        class: { " is-invalid": _vm.errors.has("date_start") },
+                        class: { "is-invalid": _vm.errors.has("date_start") },
                         attrs: { id: "date_start", placeholder: "DD-MM-GGGG" },
                         domProps: { value: inputValue },
                       },
@@ -21504,6 +21552,13 @@ var render = function () {
             expression: "form.date_start",
           },
         }),
+        _vm._v(" "),
+        _vm.errors.has("date_start")
+          ? _c("div", {
+              staticClass: "invalid-feedback",
+              domProps: { textContent: _vm._s(_vm.errors.get("date_start")) },
+            })
+          : _vm._e(),
       ],
       1
     ),
@@ -21513,18 +21568,13 @@ var render = function () {
       { staticClass: "col" },
       [
         _c("DatePicker", {
-          staticClass: "input-group input-group-flat",
-          class: { "form-input-danger": _vm.errors.has("date_end") },
+          staticClass: "input-group",
+          class: { "is-invalid": _vm.errors.has("date_end") },
           attrs: {
             mode: "datetime",
             "model-config": _vm.modelConfig,
             "max-date": new Date(),
             timezone: "UTC",
-          },
-          on: {
-            input: function ($event) {
-              return _vm.errors.clear("date_end")
-            },
           },
           scopedSlots: _vm._u([
             {
@@ -21533,7 +21583,7 @@ var render = function () {
                 var inputValue = ref.inputValue
                 var inputEvents = ref.inputEvents
                 return [
-                  _c("span", { staticClass: "input-group-text" }, [
+                  _c("span", { staticClass: "btn" }, [
                     _c(
                       "svg",
                       {
@@ -21597,7 +21647,7 @@ var render = function () {
                     _vm._g(
                       {
                         staticClass: "form-control",
-                        class: { " is-invalid": _vm.errors.has("date_end") },
+                        class: { "is-invalid": _vm.errors.has("date_end") },
                         attrs: { id: "date_end", placeholder: "DD-MM-GGGG" },
                         domProps: { value: inputValue },
                       },
@@ -21616,6 +21666,13 @@ var render = function () {
             expression: "form.date_end",
           },
         }),
+        _vm._v(" "),
+        _vm.errors.has("date_end")
+          ? _c("div", {
+              staticClass: "invalid-feedback",
+              domProps: { textContent: _vm._s(_vm.errors.get("date_end")) },
+            })
+          : _vm._e(),
       ],
       1
     ),
@@ -21625,7 +21682,7 @@ var render = function () {
         "button",
         {
           staticClass: "btn btn-success",
-          attrs: { disabled: !_vm.form.date_start || !_vm.form.date_end },
+          attrs: { disable: !_vm.form.date_start || !_vm.form.date_end },
           on: {
             click: function ($event) {
               $event.preventDefault()
