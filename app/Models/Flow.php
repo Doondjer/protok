@@ -12,7 +12,7 @@ class Flow extends Model
     use HasFactory;
 
 
-    protected $connection = 'sqlsrv';
+//    protected $connection = 'sqlsrv';
 
    // protected $appends = ['total_flow'];
 
@@ -22,7 +22,7 @@ class Flow extends Model
 
     protected $guarded = [];
 
-    protected $table = 'Vrednosti';
+  //  protected $table = 'Vrednosti';
 
 
     public function getTotalFlowAttribute()

@@ -57,6 +57,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 
 
@@ -65,6 +71,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ['rodent'],
   data: function data() {
     return {
+      loading: true,
       range: {
         start: new Date(new Date().setDate(new Date().getDate() - 7)),
         end: new Date()
@@ -182,6 +189,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     refresh: function refresh(_ref) {
       var data = _ref.data;
+      this.loading = false;
       this.series = [{
         name: 'Protok',
         data: data.data
@@ -341,6 +349,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 
 
@@ -366,7 +377,8 @@ var datePicker = function datePicker() {
         per_page: 10,
         page: 1
       },
-      show_export: false
+      show_export: false,
+      loading: true
     };
   },
   components: {
@@ -384,6 +396,7 @@ var datePicker = function datePicker() {
     },
     refresh: function refresh(_ref) {
       var data = _ref.data;
+      this.loading = false;
       this.dataSet = data.data;
       console.log(this.dataSet.per_page);
       this.form.per_page = this.dataSet.per_page;
@@ -613,6 +626,26 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   },
   webSocketUrl: function webSocketUrl(url) {
     return _BASE__WEBPACK_IMPORTED_MODULE_2__.apiClient.get(url);
+  },
+  getServerUsageData: function getServerUsageData() {
+    return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee8() {
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee8$(_context8) {
+        while (1) {
+          switch (_context8.prev = _context8.next) {
+            case 0:
+              _context8.next = 2;
+              return _API__WEBPACK_IMPORTED_MODULE_1__.apiClient.get("sanctum/csrf-cookie");
+
+            case 2:
+              return _context8.abrupt("return", _API__WEBPACK_IMPORTED_MODULE_1__.apiClient.get("/server/usage"));
+
+            case 3:
+            case "end":
+              return _context8.stop();
+          }
+        }
+      }, _callee8);
+    }))();
   }
 });
 
@@ -4309,7 +4342,7 @@ var render = function () {
         },
         [
           _c("div", { staticClass: "modal-content" }, [
-            _c("div", { staticClass: "modal-header" }, [
+            _c("div", { staticClass: "modal-header left-close" }, [
               _c("h5", {
                 staticClass: "modal-title",
                 domProps: { textContent: _vm._s(_vm.rodent.name) },
@@ -4404,22 +4437,33 @@ var render = function () {
                     "div",
                     { staticClass: "col-md-8", attrs: { id: "chart" } },
                     [
-                      _c(
-                        "div",
-                        { attrs: { id: "chart-timeline" } },
-                        [
-                          _c("apexchart", {
-                            ref: "chart",
-                            attrs: {
-                              type: "area",
-                              height: "350",
-                              options: _vm.chartOptions,
-                              series: _vm.series,
-                            },
-                          }),
-                        ],
-                        1
-                      ),
+                      _vm.loading
+                        ? _c(
+                            "div",
+                            { staticClass: "empty w-100 chart-wrapper" },
+                            [
+                              _c("div", {
+                                staticClass:
+                                  "spinner-border icon-lg text-green",
+                              }),
+                            ]
+                          )
+                        : _c(
+                            "div",
+                            { attrs: { id: "chart-timeline" } },
+                            [
+                              _c("apexchart", {
+                                ref: "chart",
+                                attrs: {
+                                  type: "area",
+                                  height: "350",
+                                  options: _vm.chartOptions,
+                                  series: _vm.series,
+                                },
+                              }),
+                            ],
+                            1
+                          ),
                     ]
                   ),
                   _vm._v(" "),
@@ -4427,22 +4471,33 @@ var render = function () {
                     "div",
                     { staticClass: "col-md-4", attrs: { id: "bar_chart" } },
                     [
-                      _c(
-                        "div",
-                        { attrs: { id: "bar-chart" } },
-                        [
-                          _c("apexchart", {
-                            ref: "bar_chart",
-                            attrs: {
-                              type: "bar",
-                              height: "350",
-                              options: _vm.barChartOptions,
-                              series: _vm.barSeries,
-                            },
-                          }),
-                        ],
-                        1
-                      ),
+                      _vm.loading
+                        ? _c(
+                            "div",
+                            { staticClass: "empty w-100 chart-wrapper" },
+                            [
+                              _c("div", {
+                                staticClass:
+                                  "spinner-border icon-lg text-green",
+                              }),
+                            ]
+                          )
+                        : _c(
+                            "div",
+                            { attrs: { id: "bar-chart" } },
+                            [
+                              _c("apexchart", {
+                                ref: "bar_chart",
+                                attrs: {
+                                  type: "bar",
+                                  height: "350",
+                                  options: _vm.barChartOptions,
+                                  series: _vm.barSeries,
+                                },
+                              }),
+                            ],
+                            1
+                          ),
                     ]
                   ),
                 ]),
@@ -4667,78 +4722,87 @@ var render = function () {
                     : _c("tbody", [
                         _c("tr", [
                           _c("td", { attrs: { colspan: "5" } }, [
-                            _c("div", { staticClass: "empty" }, [
-                              _c("div", { staticClass: "empty-icon" }, [
-                                _c(
-                                  "svg",
-                                  {
-                                    staticClass: "icon",
-                                    attrs: {
-                                      fill: "none",
-                                      height: "24",
-                                      stroke: "currentColor",
-                                      "stroke-linecap": "round",
-                                      "stroke-linejoin": "round",
-                                      "stroke-width": "2",
-                                      viewBox: "0 0 24 24",
-                                      width: "24",
-                                      xmlns: "http://www.w3.org/2000/svg",
+                            _vm.loading
+                              ? _c("div", { staticClass: "empty" }, [
+                                  _c("div", {
+                                    staticClass:
+                                      "spinner-border icon-lg text-green",
+                                  }),
+                                ])
+                              : _c("div", { staticClass: "empty" }, [
+                                  _c("div", { staticClass: "empty-icon" }, [
+                                    _c(
+                                      "svg",
+                                      {
+                                        staticClass: "icon",
+                                        attrs: {
+                                          fill: "none",
+                                          height: "24",
+                                          stroke: "currentColor",
+                                          "stroke-linecap": "round",
+                                          "stroke-linejoin": "round",
+                                          "stroke-width": "2",
+                                          viewBox: "0 0 24 24",
+                                          width: "24",
+                                          xmlns: "http://www.w3.org/2000/svg",
+                                        },
+                                      },
+                                      [
+                                        _c("path", {
+                                          attrs: {
+                                            d: "M0 0h24v24H0z",
+                                            fill: "none",
+                                            stroke: "none",
+                                          },
+                                        }),
+                                        _vm._v(" "),
+                                        _c("circle", {
+                                          attrs: { cx: "12", cy: "12", r: "9" },
+                                        }),
+                                        _vm._v(" "),
+                                        _c("line", {
+                                          attrs: {
+                                            x1: "9",
+                                            x2: "9.01",
+                                            y1: "10",
+                                            y2: "10",
+                                          },
+                                        }),
+                                        _vm._v(" "),
+                                        _c("line", {
+                                          attrs: {
+                                            x1: "15",
+                                            x2: "15.01",
+                                            y1: "10",
+                                            y2: "10",
+                                          },
+                                        }),
+                                        _vm._v(" "),
+                                        _c("path", {
+                                          attrs: {
+                                            d: "M9.5 15.25a3.5 3.5 0 0 1 5 0",
+                                          },
+                                        }),
+                                      ]
+                                    ),
+                                  ]),
+                                  _vm._v(" "),
+                                  _c("p", { staticClass: "empty-title" }, [
+                                    _vm._v("Ništa nije pronađeno!"),
+                                  ]),
+                                  _vm._v(" "),
+                                  _c(
+                                    "p",
+                                    {
+                                      staticClass: "empty-subtitle text-muted",
                                     },
-                                  },
-                                  [
-                                    _c("path", {
-                                      attrs: {
-                                        d: "M0 0h24v24H0z",
-                                        fill: "none",
-                                        stroke: "none",
-                                      },
-                                    }),
-                                    _vm._v(" "),
-                                    _c("circle", {
-                                      attrs: { cx: "12", cy: "12", r: "9" },
-                                    }),
-                                    _vm._v(" "),
-                                    _c("line", {
-                                      attrs: {
-                                        x1: "9",
-                                        x2: "9.01",
-                                        y1: "10",
-                                        y2: "10",
-                                      },
-                                    }),
-                                    _vm._v(" "),
-                                    _c("line", {
-                                      attrs: {
-                                        x1: "15",
-                                        x2: "15.01",
-                                        y1: "10",
-                                        y2: "10",
-                                      },
-                                    }),
-                                    _vm._v(" "),
-                                    _c("path", {
-                                      attrs: {
-                                        d: "M9.5 15.25a3.5 3.5 0 0 1 5 0",
-                                      },
-                                    }),
-                                  ]
-                                ),
-                              ]),
-                              _vm._v(" "),
-                              _c("p", { staticClass: "empty-title" }, [
-                                _vm._v("Nište nije pronađeno!"),
-                              ]),
-                              _vm._v(" "),
-                              _c(
-                                "p",
-                                { staticClass: "empty-subtitle text-muted" },
-                                [
-                                  _vm._v(
-                                    "\n                                        Pokušaj sa drugim bagerom ili kontaktiraj administratore.\n                                    "
+                                    [
+                                      _vm._v(
+                                        "\n                                        Pokušaj sa drugim bagerom ili kontaktiraj administratore.\n                                    "
+                                      ),
+                                    ]
                                   ),
-                                ]
-                              ),
-                            ]),
+                                ]),
                           ]),
                         ]),
                       ]),

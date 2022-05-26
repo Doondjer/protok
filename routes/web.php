@@ -28,6 +28,7 @@ Route::middleware('auth')->group(function(){
 });
 
 Route::middleware('admin')->prefix('admin')->group(function() {
+    Route::get('dashboard' , [\App\Http\Controllers\AdminsController::class, 'dashboard'])->name('admin.dashboard');
     Route::get('maintenance', [\App\Http\Controllers\AdminsController::class, 'maintenance'])->name('admin.maintenance');
 
     Route::post('shut/down', [\App\Http\Controllers\AdminsController::class, 'down'])->name('admin.maintenance.down');

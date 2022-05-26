@@ -67,4 +67,44 @@ class AdminsController extends Controller
     {
         return Excel::download(new FlowExport($request->validated()), 'protok.xlsx');
     }
+
+    public function dashboard()
+    {
+        return view('admin.dashboard.index');
+    }
+
+    public function server_usage()
+    {
+        //RAM usage
+        $free = shell_exec('free');
+        $free = (string) trim($free);
+        $free_arr = explode("\n", $free);
+        $mem = explode(" ", $free_arr[1]);
+        $mem = array_filter($mem);
+        $mem = array_merge($mem);
+        $usedmem = $mem[2];
+        $usedmemInGB = number_format($usedmem / 1048576, 2);
+
+        $fh = fopen('/proc/meminfo', 'r');
+        $mem = 0;
+        while ($line = fgets($fh)) {
+            $pieces = array();
+            if (preg_match('/^MemTotal:\s+(\d+)\skB$/', $line, $pieces)) {
+                $mem = $pieces[1];
+                break;
+            }
+        }
+        fclose($fh);
+        $totalram = number_format($mem / 1048576, 2);
+
+        //cpu usage
+        $cpu_load = sys_getloadavg();
+        $load = $cpu_load[0];
+
+        return response()->json(compact(
+            'totalram',
+            'usedmemInGB',
+            'load'
+        ));
+    }
 }

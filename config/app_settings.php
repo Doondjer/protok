@@ -10,7 +10,7 @@ return [
         'flow_paginate_default' => 10,
         'multiday_max_days'     => 20,
         'multiday_default_days' => 7,
-        'max_rodents_scan_cycle' => 12 * 60,
+        'max_rodents_scan_cycle' => 12 * 60, // u sekundama
     ],
     'field_config' => [
 

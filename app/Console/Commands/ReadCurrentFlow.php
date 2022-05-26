@@ -133,11 +133,11 @@ class ReadCurrentFlow extends Command
        // Cache::forget('rodent:id');
 
     /*
-        $this->currentFlow['next_rodent_id'] = 10;
-        $this->currentFlow['rodent_id'] = 9;
+        $this->currentFlow['next_rodent_id'] = 6;
+        $this->currentFlow['rodent_id'] = 6;
         $this->currentFlow['current_flow'] = 5000;
         $this->currentFlow['status'] = '11111111';
-        */     dump($this->currentFlow);
+        */           dump($this->currentFlow);
 
         if($this->currentFlow && ($this->currentFlow['next_rodent_id'] - Cache::get('rodent:id') > 1) && $this->currentFlow['next_rodent_id'] != 1) {
 
@@ -147,31 +147,8 @@ class ReadCurrentFlow extends Command
 
             $this->dispatchBlankStatus(config('app_settings.values.nb_rodents'));
         }
-        // Ukoliko je preskocio bager dok je iscitani manji od ukupnog broja bagera
-      /*  if(Cache::get('rodent:id') && $this->currentFlow && $this->currentFlow['rodent_id'] && ($this->currentFlow['rodent_id'] - Cache::get('rodent:id')) > 1) {
 
-                for ($rodentToSkip = Cache::get('rodent:id') + 1; $rodentToSkip < $this->currentFlow['rodent_id']; $rodentToSkip++){
-                    $this->dispatchBlankStatus($rodentToSkip);
-                }
-        }
-
-        if (
-            ($this->currentFlow && Cache::get('rodent:id') > $this->currentFlow['rodent_id'] && Cache::get('rodent:id') < config('app_settings.values.nb_rodents')) // Ukoliko je preskocio bager koji je manji od 12 a iscitao bager veci od 1
-            || Carbon::now()->diffInSeconds(Cache::get('rodent:time', Carbon::now())) > config('app_settings.values.max_rodents_scan_cycle') // Ako ne vidi nijedan bager tj receive u db4 ostane na prethodno vidjenom bageru
-        ) {
-
-            for ($rodentToSkip = Cache::get('rodent:id') + 1; $rodentToSkip <= 12; $rodentToSkip++) {
-                $this->info('skiped '.$rodentToSkip);
-                $this->dispatchBlankStatus($rodentToSkip);
-            }
-
-            if($this->currentFlow && $this->currentFlow['rodent_id'] != 1){
-                for ($rodentToSkip = 1; $rodentToSkip < $this->currentFlow['rodent_id']; $rodentToSkip++) {
-                    $this->info('skiped '.$rodentToSkip);
-                    $this->dispatchBlankStatus($rodentToSkip);
-                }
-            }
-        }*/
+        Cache::put('rodents:' . Arr::get($this->currentFlow, 'rodent_id', null), $this->currentFlow, config('app_settings.values.max_rodents_scan_cycle'));
 
         Cache::put('rodent:id', Arr::get($this->currentFlow, 'rodent_id', null));
         Cache::put('next:rodent:id', Arr::get($this->currentFlow, 'next_rodent_id', null));
@@ -186,10 +163,14 @@ class ReadCurrentFlow extends Command
      */
     private function dispatchBlankStatus(mixed $rodentToSkip): void
     {
-        NewCurrentFlow::dispatch([
+        $response = [
             'rodent_id' => $rodentToSkip,
             'current_flow' => 0,
             'status' => '00000000',
-        ]);
+        ];
+
+        Cache::put("rodents:$rodentToSkip", $response, config('app_settings.values.max_rodents_scan_cycle'));
+
+        NewCurrentFlow::dispatch($response);
     }
 }

@@ -114,24 +114,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 var ObjectResource = function ObjectResource() {
@@ -152,7 +134,7 @@ var modbusStatus = function modbusStatus() {
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  props: ['rodent_list', 'panel_flows', 'graph_data', 'current_flows', 'user'],
+  props: ['rodent_list', 'panel_flows', 'graph_data', 'current_flows', 'user', 'cached_statuses'],
   emits: ['update:current_flows'],
   data: function data() {
     return {
@@ -233,6 +215,8 @@ var modbusStatus = function modbusStatus() {
   mounted: function mounted() {
     var _this2 = this;
 
+    this.currentFlows = this.current_flows;
+    this.statuses = this.cached_statuses;
     this.updateChart = {
       data: {
         graphData: this.graph_data,
@@ -1569,7 +1553,7 @@ var render = function () {
               "div",
               { staticClass: "col-12 col-md-auto ms-auto d-print-none" },
               [
-                _c("div", { staticClass: "btn-list" }, [
+                _c("div", { staticClass: "btn-list btn-group" }, [
                   !_vm.isModbus && !_vm.show_modbus
                     ? _c(
                         "button",
@@ -1633,200 +1617,180 @@ var render = function () {
                             ]
                           ),
                           _vm._v(
-                            "\n                               Modbus Greška\n                           "
+                            "\n                            Modbus Greška\n                        "
                           ),
                         ]
                       )
                     : _vm._e(),
                   _vm._v(" "),
-                  _vm.showExpand
-                    ? _c("div", [
-                        _vm.fullscreen
-                          ? _c(
-                              "button",
-                              {
-                                staticClass: "btn expand-screen",
-                                attrs: { type: "button" },
-                                on: { click: _vm.toggle },
+                  _vm.fullscreen && _vm.showExpand
+                    ? _c(
+                        "button",
+                        {
+                          staticClass: "btn expand-screen",
+                          attrs: { type: "button" },
+                          on: { click: _vm.toggle },
+                        },
+                        [
+                          _c(
+                            "svg",
+                            {
+                              staticClass:
+                                "icon icon-tabler icon-tabler-arrows-minimize",
+                              attrs: {
+                                xmlns: "http://www.w3.org/2000/svg",
+                                width: "24",
+                                height: "24",
+                                viewBox: "0 0 24 24",
+                                "stroke-width": "2",
+                                stroke: "currentColor",
+                                fill: "none",
+                                "stroke-linecap": "round",
+                                "stroke-linejoin": "round",
                               },
-                              [
-                                _c(
-                                  "svg",
-                                  {
-                                    staticClass:
-                                      "icon icon-tabler icon-tabler-arrows-minimize",
-                                    attrs: {
-                                      xmlns: "http://www.w3.org/2000/svg",
-                                      width: "24",
-                                      height: "24",
-                                      viewBox: "0 0 24 24",
-                                      "stroke-width": "2",
-                                      stroke: "currentColor",
-                                      fill: "none",
-                                      "stroke-linecap": "round",
-                                      "stroke-linejoin": "round",
-                                    },
-                                  },
-                                  [
-                                    _c("path", {
-                                      attrs: {
-                                        stroke: "none",
-                                        d: "M0 0h24v24H0z",
-                                        fill: "none",
-                                      },
-                                    }),
-                                    _vm._v(" "),
-                                    _c("polyline", {
-                                      attrs: { points: "5 9 9 9 9 5" },
-                                    }),
-                                    _vm._v(" "),
-                                    _c("line", {
-                                      attrs: {
-                                        x1: "3",
-                                        y1: "3",
-                                        x2: "9",
-                                        y2: "9",
-                                      },
-                                    }),
-                                    _vm._v(" "),
-                                    _c("polyline", {
-                                      attrs: { points: "5 15 9 15 9 19" },
-                                    }),
-                                    _vm._v(" "),
-                                    _c("line", {
-                                      attrs: {
-                                        x1: "3",
-                                        y1: "21",
-                                        x2: "9",
-                                        y2: "15",
-                                      },
-                                    }),
-                                    _vm._v(" "),
-                                    _c("polyline", {
-                                      attrs: { points: "19 9 15 9 15 5" },
-                                    }),
-                                    _vm._v(" "),
-                                    _c("line", {
-                                      attrs: {
-                                        x1: "15",
-                                        y1: "9",
-                                        x2: "21",
-                                        y2: "3",
-                                      },
-                                    }),
-                                    _vm._v(" "),
-                                    _c("polyline", {
-                                      attrs: { points: "19 15 15 15 15 19" },
-                                    }),
-                                    _vm._v(" "),
-                                    _c("line", {
-                                      attrs: {
-                                        x1: "15",
-                                        y1: "15",
-                                        x2: "21",
-                                        y2: "21",
-                                      },
-                                    }),
-                                  ]
-                                ),
-                                _vm._v(
-                                  "\n                                   Skupi prikaz\n                               "
-                                ),
-                              ]
-                            )
-                          : _c(
-                              "button",
-                              {
-                                staticClass: "btn expand-screen",
-                                attrs: { type: "button" },
-                                on: { click: _vm.toggle },
+                            },
+                            [
+                              _c("path", {
+                                attrs: {
+                                  stroke: "none",
+                                  d: "M0 0h24v24H0z",
+                                  fill: "none",
+                                },
+                              }),
+                              _vm._v(" "),
+                              _c("polyline", {
+                                attrs: { points: "5 9 9 9 9 5" },
+                              }),
+                              _vm._v(" "),
+                              _c("line", {
+                                attrs: { x1: "3", y1: "3", x2: "9", y2: "9" },
+                              }),
+                              _vm._v(" "),
+                              _c("polyline", {
+                                attrs: { points: "5 15 9 15 9 19" },
+                              }),
+                              _vm._v(" "),
+                              _c("line", {
+                                attrs: { x1: "3", y1: "21", x2: "9", y2: "15" },
+                              }),
+                              _vm._v(" "),
+                              _c("polyline", {
+                                attrs: { points: "19 9 15 9 15 5" },
+                              }),
+                              _vm._v(" "),
+                              _c("line", {
+                                attrs: { x1: "15", y1: "9", x2: "21", y2: "3" },
+                              }),
+                              _vm._v(" "),
+                              _c("polyline", {
+                                attrs: { points: "19 15 15 15 15 19" },
+                              }),
+                              _vm._v(" "),
+                              _c("line", {
+                                attrs: {
+                                  x1: "15",
+                                  y1: "15",
+                                  x2: "21",
+                                  y2: "21",
+                                },
+                              }),
+                            ]
+                          ),
+                          _vm._v(
+                            "\n                            Skupi prikaz\n                        "
+                          ),
+                        ]
+                      )
+                    : _vm._e(),
+                  _vm._v(" "),
+                  !_vm.fullscreen && _vm.showExpand
+                    ? _c(
+                        "button",
+                        {
+                          staticClass: "btn expand-screen",
+                          attrs: { type: "button" },
+                          on: { click: _vm.toggle },
+                        },
+                        [
+                          _c(
+                            "svg",
+                            {
+                              staticClass:
+                                "icon icon-tabler icon-tabler-arrows-maximize",
+                              attrs: {
+                                xmlns: "http://www.w3.org/2000/svg",
+                                width: "24",
+                                height: "24",
+                                viewBox: "0 0 24 24",
+                                "stroke-width": "2",
+                                stroke: "currentColor",
+                                fill: "none",
+                                "stroke-linecap": "round",
+                                "stroke-linejoin": "round",
                               },
-                              [
-                                _c(
-                                  "svg",
-                                  {
-                                    staticClass:
-                                      "icon icon-tabler icon-tabler-arrows-maximize",
-                                    attrs: {
-                                      xmlns: "http://www.w3.org/2000/svg",
-                                      width: "24",
-                                      height: "24",
-                                      viewBox: "0 0 24 24",
-                                      "stroke-width": "2",
-                                      stroke: "currentColor",
-                                      fill: "none",
-                                      "stroke-linecap": "round",
-                                      "stroke-linejoin": "round",
-                                    },
-                                  },
-                                  [
-                                    _c("path", {
-                                      attrs: {
-                                        stroke: "none",
-                                        d: "M0 0h24v24H0z",
-                                        fill: "none",
-                                      },
-                                    }),
-                                    _vm._v(" "),
-                                    _c("polyline", {
-                                      attrs: { points: "16 4 20 4 20 8" },
-                                    }),
-                                    _vm._v(" "),
-                                    _c("line", {
-                                      attrs: {
-                                        x1: "14",
-                                        y1: "10",
-                                        x2: "20",
-                                        y2: "4",
-                                      },
-                                    }),
-                                    _vm._v(" "),
-                                    _c("polyline", {
-                                      attrs: { points: "8 20 4 20 4 16" },
-                                    }),
-                                    _vm._v(" "),
-                                    _c("line", {
-                                      attrs: {
-                                        x1: "4",
-                                        y1: "20",
-                                        x2: "10",
-                                        y2: "14",
-                                      },
-                                    }),
-                                    _vm._v(" "),
-                                    _c("polyline", {
-                                      attrs: { points: "16 20 20 20 20 16" },
-                                    }),
-                                    _vm._v(" "),
-                                    _c("line", {
-                                      attrs: {
-                                        x1: "14",
-                                        y1: "14",
-                                        x2: "20",
-                                        y2: "20",
-                                      },
-                                    }),
-                                    _vm._v(" "),
-                                    _c("polyline", {
-                                      attrs: { points: "8 4 4 4 4 8" },
-                                    }),
-                                    _vm._v(" "),
-                                    _c("line", {
-                                      attrs: {
-                                        x1: "4",
-                                        y1: "4",
-                                        x2: "10",
-                                        y2: "10",
-                                      },
-                                    }),
-                                  ]
-                                ),
-                                _vm._v(
-                                  "\n                                   Proširi prikaz\n                               "
-                                ),
-                              ]
-                            ),
-                      ])
+                            },
+                            [
+                              _c("path", {
+                                attrs: {
+                                  stroke: "none",
+                                  d: "M0 0h24v24H0z",
+                                  fill: "none",
+                                },
+                              }),
+                              _vm._v(" "),
+                              _c("polyline", {
+                                attrs: { points: "16 4 20 4 20 8" },
+                              }),
+                              _vm._v(" "),
+                              _c("line", {
+                                attrs: {
+                                  x1: "14",
+                                  y1: "10",
+                                  x2: "20",
+                                  y2: "4",
+                                },
+                              }),
+                              _vm._v(" "),
+                              _c("polyline", {
+                                attrs: { points: "8 20 4 20 4 16" },
+                              }),
+                              _vm._v(" "),
+                              _c("line", {
+                                attrs: {
+                                  x1: "4",
+                                  y1: "20",
+                                  x2: "10",
+                                  y2: "14",
+                                },
+                              }),
+                              _vm._v(" "),
+                              _c("polyline", {
+                                attrs: { points: "16 20 20 20 20 16" },
+                              }),
+                              _vm._v(" "),
+                              _c("line", {
+                                attrs: {
+                                  x1: "14",
+                                  y1: "14",
+                                  x2: "20",
+                                  y2: "20",
+                                },
+                              }),
+                              _vm._v(" "),
+                              _c("polyline", {
+                                attrs: { points: "8 4 4 4 4 8" },
+                              }),
+                              _vm._v(" "),
+                              _c("line", {
+                                attrs: { x1: "4", y1: "4", x2: "10", y2: "10" },
+                              }),
+                            ]
+                          ),
+                          _vm._v(
+                            "\n                            Proširi prikaz\n                        "
+                          ),
+                        ]
+                      )
                     : _vm._e(),
                 ]),
               ]

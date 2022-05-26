@@ -33,4 +33,8 @@ export default {
     webSocketUrl(url) {
         return BASE.apiClient.get(url);
     },
+    async getServerUsageData() {
+        await API.apiClient.get("sanctum/csrf-cookie");
+        return API.apiClient.get(`/server/usage`);
+    },
 }

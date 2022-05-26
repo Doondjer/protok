@@ -7,6 +7,8 @@ use App\Http\Resources\RodentCollection;
 use App\Http\Resources\RodentResource;
 use App\Models\Rodent;
 use Illuminate\Http\Response;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Cache;
 
 class FLowsController extends Controller
 {
@@ -31,12 +33,27 @@ class FLowsController extends Controller
 
         $graphData = $this->flowRepository->getPanelGraphData();
 
-        $currentFlows = $this->flowRepository->getCurrentFlowData();
+        $currentFlows = [];
+        $statuses = [];
+
+        foreach ($rodents as $rodentId => $rodent) {
+            if ($cachedRodent = Cache::get("rodents:$rodentId")) {
+                $currentFlows[$rodentId] = Arr::get($cachedRodent, 'current_flow', 0);
+                $statuses[$rodentId] = array_map(
+                    function ($status) {
+                        return $status == 1;
+                    },
+                    str_split(
+                        Arr::get($cachedRodent,'status', [0,0,0,0,0,0,0,0])
+                    ));
+            }
+        }
 
         return view('panel', compact(
             'panelFlows',
             'graphData',
             'currentFlows',
+            'statuses',
             'rodents'
         ));
     }

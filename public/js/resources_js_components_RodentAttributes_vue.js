@@ -344,6 +344,26 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   },
   webSocketUrl: function webSocketUrl(url) {
     return _BASE__WEBPACK_IMPORTED_MODULE_2__.apiClient.get(url);
+  },
+  getServerUsageData: function getServerUsageData() {
+    return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee8() {
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee8$(_context8) {
+        while (1) {
+          switch (_context8.prev = _context8.next) {
+            case 0:
+              _context8.next = 2;
+              return _API__WEBPACK_IMPORTED_MODULE_1__.apiClient.get("sanctum/csrf-cookie");
+
+            case 2:
+              return _context8.abrupt("return", _API__WEBPACK_IMPORTED_MODULE_1__.apiClient.get("/server/usage"));
+
+            case 3:
+            case "end":
+              return _context8.stop();
+          }
+        }
+      }, _callee8);
+    }))();
   }
 });
 

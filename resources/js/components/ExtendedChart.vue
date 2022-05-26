@@ -2,7 +2,7 @@
     <div class="modal modal-blur fade show" style="display: block;" aria-modal="true">
         <div class="modal-dialog modal-fullscreen modal-dialog-centered" role="document">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header left-close">
                     <h5 class="modal-title" v-text="rodent.name"></h5>
                     <button type="button" @click="$emit('close_graph')" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -18,12 +18,18 @@
                     </div>
                     <div class="row">
                         <div class="col-md-8" id="chart">
-                            <div id="chart-timeline">
+                            <div v-if="loading" class="empty w-100 chart-wrapper">
+                                <div class="spinner-border icon-lg text-green"></div>
+                            </div>
+                            <div v-else id="chart-timeline">
                                 <apexchart type="area" height="350" ref="chart" :options="chartOptions" :series="series"></apexchart>
                             </div>
                         </div>
                         <div class="col-md-4" id="bar_chart">
-                            <div id="bar-chart">
+                            <div v-if="loading" class="empty w-100 chart-wrapper">
+                                <div class="spinner-border icon-lg text-green"></div>
+                            </div>
+                            <div v-else id="bar-chart">
                                 <apexchart type="bar" height="350" ref="bar_chart" :options="barChartOptions" :series="barSeries"></apexchart>
                             </div>
                         </div>
@@ -49,6 +55,7 @@ export default {
     props: ['rodent'],
     data() {
         return {
+            loading: true,
             range: {
                 start: new Date(new Date().setDate(new Date().getDate()-7)),
                 end: new Date(),
@@ -168,6 +175,9 @@ export default {
 
         },
         refresh({data}) {
+
+            this.loading = false;
+
             this.series = [
                 {
                     name: 'Protok',

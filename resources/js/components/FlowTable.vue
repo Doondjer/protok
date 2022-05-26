@@ -64,8 +64,11 @@
                             <tr>
                                 <td colspan="5">
 
-                                    <div class="empty">
-                                        <div class="empty-icon"><!-- Download SVG icon from http://tabler-icons.io/i/mood-sad -->
+                                    <div v-if="loading" class="empty">
+                                        <div class="spinner-border icon-lg text-green"></div>
+                                    </div>
+                                    <div v-else class="empty">
+                                        <div class="empty-icon">
                                             <svg class="icon" fill="none" height="24" stroke="currentColor" stroke-linecap="round"
                                                  stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24"
                                                  xmlns="http://www.w3.org/2000/svg">
@@ -76,7 +79,7 @@
                                                 <path d="M9.5 15.25a3.5 3.5 0 0 1 5 0"></path>
                                             </svg>
                                         </div>
-                                        <p class="empty-title">Nište nije pronađeno!</p>
+                                        <p class="empty-title">Ništa nije pronađeno!</p>
                                         <p class="empty-subtitle text-muted">
                                             Pokušaj sa drugim bagerom ili kontaktiraj administratore.
                                         </p>
@@ -122,6 +125,7 @@ export default {
                 page:1
             },
             show_export: false,
+            loading: true,
         }
     },
     components: {
@@ -140,6 +144,9 @@ export default {
                 });
         },
         refresh({data}) {
+
+            this.loading = false;
+
             this.dataSet = data.data;
             console.log(this.dataSet.per_page);
             this.form.per_page = this.dataSet.per_page;

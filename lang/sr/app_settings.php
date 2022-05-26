@@ -6,7 +6,7 @@ return [
         'favicon_url'           => 'Absolutna putanja za iconu stranice',
         'logo_url'              => 'Absolutna putanja za logo stranice',
         'app_name'              => 'Ime aplikacije',
-        'max_rodents_scan_cycle'=> 'Maksimalno trajanje scan ciklusa za sve bagere. Ukoliko se prekorači smatra se da su svi bageri isprozivani. Koristi se za modbus komunikaciju ako zabode na jednom bageru pri prozivanju ili ne vidi druge bagere da prepiše status status bitova na 00000000',
+        'max_rodents_scan_cycle'=> 'Maksimalno trajanje scan ciklusa za sve bagere. Ukoliko se prekorači smatra se da su svi bageri isprozivani. U sekundama',
         'app_email'             => 'Email adresa administratora za primanje email-ova.',
         'flow_paginate_allowed' => 'Maksimalni broj redova koji će biti prikazan u tabeli protoka na velikom Chartu.',
         'flow_paginate_default' => 'Podrazumevani broj redova koji će biti prikazan u tabeli protoka na velikom Chartu. Aktivira se pri učitavanju stranice i kada se pređe preko maksimalno dozvoljenog broja redova.',

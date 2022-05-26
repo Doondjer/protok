@@ -8,7 +8,7 @@
                     </div>
                     <!-- Page title actions -->
                     <div class="col-12 col-md-auto ms-auto d-print-none">
-                        <div class="btn-list">
+                        <div class="btn-list btn-group">
                             <button class="btn btn-outline-danger disabled" type="button" v-if=" ! isModbus && ! show_modbus">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="icon text-danger" aria-hidden="true" role="img" width="24" height="24" preserveAspectRatio="xMidYMid meet" viewBox="0 0 36 36">
                                     <circle cx="18" cy="29.54" r="3" fill="currentColor" class="clr-i-solid clr-i-solid-path-1"/>
@@ -19,52 +19,34 @@
                                 </svg>
                                 Modbus Greška
                             </button>
-                            <div v-if="showExpand">
-                                <button v-if="fullscreen" type="button" class="btn expand-screen" @click="toggle">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrows-minimize" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                        <polyline points="5 9 9 9 9 5"></polyline>
-                                        <line x1="3" y1="3" x2="9" y2="9"></line>
-                                        <polyline points="5 15 9 15 9 19"></polyline>
-                                        <line x1="3" y1="21" x2="9" y2="15"></line>
-                                        <polyline points="19 9 15 9 15 5"></polyline>
-                                        <line x1="15" y1="9" x2="21" y2="3"></line>
-                                        <polyline points="19 15 15 15 15 19"></polyline>
-                                        <line x1="15" y1="15" x2="21" y2="21"></line>
-                                    </svg>
-                                    Skupi prikaz
-                                </button>
-                                <button v-else type="button" class="btn expand-screen" @click="toggle">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-arrows-maximize">
-                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                        <polyline points="16 4 20 4 20 8"></polyline>
-                                        <line x1="14" y1="10" x2="20" y2="4"></line>
-                                        <polyline points="8 20 4 20 4 16"></polyline>
-                                        <line x1="4" y1="20" x2="10" y2="14"></line>
-                                        <polyline points="16 20 20 20 20 16"></polyline>
-                                        <line x1="14" y1="14" x2="20" y2="20"></line>
-                                        <polyline points="8 4 4 4 4 8"></polyline>
-                                        <line x1="4" y1="4" x2="10" y2="10"></line>
-                                    </svg>
-                                    Proširi prikaz
-                                </button>
-                            </div>
- <!--                           <div class="me-3">
-                                <div class="input-icon">
-                                    <input
-                                        class="form-control"
-                                        placeholder="filter"
-                                    >
-                                    <span class="input-icon-addon">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><circle cx="10" cy="10" r="7"></circle><line x1="21" y1="21" x2="15" y2="15"></line></svg>
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <select class="form-select">
-                                    <option value="polje_b">Polje "B"</option>
-                                </select>
-                            </div>-->
+                            <button v-if="fullscreen && showExpand" type="button" class="btn expand-screen" @click="toggle">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrows-minimize" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                    <polyline points="5 9 9 9 9 5"></polyline>
+                                    <line x1="3" y1="3" x2="9" y2="9"></line>
+                                    <polyline points="5 15 9 15 9 19"></polyline>
+                                    <line x1="3" y1="21" x2="9" y2="15"></line>
+                                    <polyline points="19 9 15 9 15 5"></polyline>
+                                    <line x1="15" y1="9" x2="21" y2="3"></line>
+                                    <polyline points="19 15 15 15 15 19"></polyline>
+                                    <line x1="15" y1="15" x2="21" y2="21"></line>
+                                </svg>
+                                Skupi prikaz
+                            </button>
+                            <button v-if=" ! fullscreen && showExpand" type="button" class="btn expand-screen" @click="toggle">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-arrows-maximize">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                    <polyline points="16 4 20 4 20 8"></polyline>
+                                    <line x1="14" y1="10" x2="20" y2="4"></line>
+                                    <polyline points="8 20 4 20 4 16"></polyline>
+                                    <line x1="4" y1="20" x2="10" y2="14"></line>
+                                    <polyline points="16 20 20 20 20 16"></polyline>
+                                    <line x1="14" y1="14" x2="20" y2="20"></line>
+                                    <polyline points="8 4 4 4 4 8"></polyline>
+                                    <line x1="4" y1="4" x2="10" y2="10"></line>
+                                </svg>
+                                Proširi prikaz
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -110,7 +92,7 @@ const modbusStatus = () => import('./ModbusStatus')
 import { api as fullscreen } from 'vue-fullscreen';
 
 export default {
-    props: ['rodent_list', 'panel_flows', 'graph_data', 'current_flows', 'user'],
+    props: ['rodent_list', 'panel_flows', 'graph_data', 'current_flows', 'user','cached_statuses'],
     emits: ['update:current_flows'],
     data() {
         return {
@@ -176,6 +158,9 @@ export default {
         }
     },
     mounted() {
+
+        this.currentFlows = this.current_flows;
+        this.statuses = this.cached_statuses;
 
         this.updateChart = {
             data: {
