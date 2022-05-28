@@ -109,6 +109,7 @@ export default {
             isModbus: true,
             show_modbus: true,
             next_rodent: null,
+            users: [],
         }
     },
     components: {
@@ -194,7 +195,10 @@ console.log(data);
                     this.isModbus = false;
                 }
             });
-    },
+
+        Echo.join('online');
+
+   },
 }
 </script>
 

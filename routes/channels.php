@@ -16,9 +16,24 @@ use Illuminate\Support\Facades\Broadcast;
 Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
 });
+
 Broadcast::channel('panel', function ($user, $id) {
     return $user;
 });
+
 Broadcast::channel('current_data', function ($user, $id) {
     return $user;
+});
+
+Broadcast::channel('online', function ($user) {
+
+    if (auth()->check()) {
+        return [
+            'name' => $user->name,
+            'is_admin' => $user->isAdmin,
+            'email' => $user->email,
+            'since' => \Carbon\Carbon::now()->format('d M, H:m'),
+            'agent' => request()->header('User-Agent')
+        ];
+    }
 });

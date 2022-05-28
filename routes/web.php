@@ -25,6 +25,9 @@ Route::middleware('auth')->group(function(){
     Route::get('/', [ \App\Http\Controllers\FLowsController::class, 'index'])->name('home');
     Route::resource('/user', '\App\Http\Controllers\UsersController')->only(['edit', 'update'])->middleware('current_or_admin');
 
+    Route::get("/online", function (){
+        return view('admin.online_users.index');
+    });
 });
 
 Route::middleware('admin')->prefix('admin')->group(function() {
@@ -49,6 +52,7 @@ Route::middleware('admin')->prefix('admin')->group(function() {
     Route::get('/konfiguracija', [\App\Http\Controllers\ConfigurationController::class, 'index'])->name('admin.configuration.index');
     Route::get('/konfiguracija/{section}', [\App\Http\Controllers\ConfigurationController::class, 'edit'])->name('admin.configuration.edit');
     Route::patch('/konfiguracija', [\App\Http\Controllers\ConfigurationController::class, 'update'])->name('admin.configuration.update');
+
 });
 
 /*

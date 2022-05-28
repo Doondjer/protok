@@ -150,7 +150,8 @@ var modbusStatus = function modbusStatus() {
       statuses: {},
       isModbus: true,
       show_modbus: true,
-      next_rodent: null
+      next_rodent: null,
+      users: []
     };
   },
   components: {
@@ -246,6 +247,7 @@ var modbusStatus = function modbusStatus() {
         _this2.isModbus = false;
       }
     });
+    Echo.join('online');
   }
 });
 

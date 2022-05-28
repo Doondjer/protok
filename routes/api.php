@@ -19,7 +19,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 Route::middleware('auth:sanctum')->group(function(){
 
-    Route::post('export', [\App\Http\Controllers\AdminsController::class, 'export'])->name('export');
+    Route::post('export', [\App\Http\Controllers\AdminsController::class, 'export'])->name('export.api');
 
     Route::get('/chart/station/{station}', [\App\Http\Controllers\ChartsController::class, 'station'])->name('chart.station.api');
     Route::get('/table/station', [\App\Http\Controllers\ChartsController::class, 'table'])->name('table.station.api');

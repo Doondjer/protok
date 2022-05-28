@@ -15,7 +15,14 @@ const {css} = require("laravel-mix");
 mix.js('resources/js/app.js', 'public/js').vue()
     .copy('node_modules/@tabler/core/dist/css/tabler.css', 'public/css/tabler.css')
     .sass('resources/assets/sass/app.scss', 'public/css')
-    .css('resources/css/app.css', 'public/css');
+    .css('resources/css/app.css', 'public/css').version();
   //  .postCss('resources/css/app.css', 'public/css', [
         //
    // ]);
+
+/*mix.webpackConfig({
+    output: {
+        publicPath: '/',
+        chunkFilename: 'js/[name].[hash].js',
+    }
+});*/

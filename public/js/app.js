@@ -10361,6 +10361,9 @@ vue__WEBPACK_IMPORTED_MODULE_0__["default"].component('webSockets', function () 
 vue__WEBPACK_IMPORTED_MODULE_0__["default"].component('dashboard', function () {
   return __webpack_require__.e(/*! import() */ "resources_js_components_Dashboard_vue").then(__webpack_require__.bind(__webpack_require__, /*! ./components/Dashboard */ "./resources/js/components/Dashboard.vue"));
 });
+vue__WEBPACK_IMPORTED_MODULE_0__["default"].component('onlineList', function () {
+  return __webpack_require__.e(/*! import() */ "resources_js_components_OnlineList_vue").then(__webpack_require__.bind(__webpack_require__, /*! ./components/OnlineList */ "./resources/js/components/OnlineList.vue"));
+});
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
  * for events that are broadcast by Laravel. Echo and event broadcasting
@@ -29425,7 +29428,7 @@ Vue.compile = compileToFunctions;
 /******/ 		// This function allow to reference async chunks
 /******/ 		__webpack_require__.u = (chunkId) => {
 /******/ 			// return url for filenames not based on template
-/******/ 			if ({"resources_js_components_Panel_vue":1,"resources_js_components_ArrayTextInput_vue":1,"resources_js_components_RodentAttributes_vue":1,"resources_js_components_WebSockets_vue":1,"resources_js_components_Dashboard_vue":1,"resources_js_components_Object_vue":1,"resources_js_components_ExtendedChart_vue":1,"resources_js_components_RodentDetails_vue":1,"resources_js_components_ModbusStatus_vue":1,"resources_js_components_Paginator_vue":1,"resources_js_components_DatePicker_vue":1}[chunkId]) return "js/" + chunkId + ".js";
+/******/ 			if ({"resources_js_components_Panel_vue":1,"resources_js_components_ArrayTextInput_vue":1,"resources_js_components_RodentAttributes_vue":1,"resources_js_components_WebSockets_vue":1,"resources_js_components_Dashboard_vue":1,"resources_js_components_OnlineList_vue":1,"resources_js_components_Object_vue":1,"resources_js_components_ExtendedChart_vue":1,"resources_js_components_RodentDetails_vue":1,"resources_js_components_ModbusStatus_vue":1,"resources_js_components_Paginator_vue":1,"resources_js_components_DatePicker_vue":1}[chunkId]) return "js/" + chunkId + ".js";
 /******/ 			// return url for filenames based on template
 /******/ 			return undefined;
 /******/ 		};
