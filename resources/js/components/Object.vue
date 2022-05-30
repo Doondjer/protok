@@ -57,7 +57,7 @@
                     </div>
 
 
-                    <div class="h1 mb-0 ms-3 col" v-text="`${current_flow} m3`"></div>
+                    <div class="h1 mb-0 ms-3 col" v-text="`${current_flow} m3/h`"></div>
                         <div class="me-auto text-green spinner-border" v-if="loading"></div>
                         <div class="me-auto" v-if=" ! loading && isComunication">
                             <a href="#" @click.prevent="toggleStatuses" class="d-inline-flex align-items-center lh-1" :class="isComunication ? 'text-success' : 'text-danger'">

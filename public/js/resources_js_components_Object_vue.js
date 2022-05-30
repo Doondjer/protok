@@ -693,7 +693,7 @@ var render = function () {
             _vm._v(" "),
             _c("div", {
               staticClass: "h1 mb-0 ms-3 col",
-              domProps: { textContent: _vm._s(_vm.current_flow + " m3") },
+              domProps: { textContent: _vm._s(_vm.current_flow + " m3/h") },
             }),
             _vm._v(" "),
             _vm.loading
