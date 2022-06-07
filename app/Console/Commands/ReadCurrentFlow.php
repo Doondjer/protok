@@ -95,10 +95,10 @@ class ReadCurrentFlow extends Command
         try {
             $binaryData = $connection->connect()->sendAndReceive($packet);
 
-            Log::info('Binary received (in hex):   ' . unpack('H*', $binaryData)[1]);
+    //        Log::info('Binary received (in hex):   ' . unpack('H*', $binaryData)[1]);
+            $this->info('Binary received (in hex):   ' . unpack('H*', $binaryData)[1]);
 
             $response = ResponseFactory::parseResponseOrThrow($binaryData)->withStartAddress($this->startAddress);
-          //  dd($response);
 
             foreach ($response as $address => $word) {
 
@@ -130,6 +130,7 @@ class ReadCurrentFlow extends Command
         } finally {
             $connection->close();
         }
+
        // Cache::forget('rodent:id');
 
     /*
@@ -137,22 +138,37 @@ class ReadCurrentFlow extends Command
         $this->currentFlow['rodent_id'] = 6;
         $this->currentFlow['current_flow'] = 5000;
         $this->currentFlow['status'] = '11111111';
-        */           dump($this->currentFlow);
+        */
+        dump($this->currentFlow);
 
         if($this->currentFlow && ($this->currentFlow['next_rodent_id'] - Cache::get('rodent:id') > 1) && $this->currentFlow['next_rodent_id'] != 1) {
 
-            $this->dispatchBlankStatus($this->currentFlow['next_rodent_id'] - 1);
+            $this->dispatchBlankStatus($this->currentFlow['next_rodent_id'] - 1, $this->currentFlow['next_rodent_id']);
         }
         if($this->currentFlow && $this->currentFlow['next_rodent_id'] == 1 && Cache::get('rodent_id') != config('app_settings.values.nb_rodents')) {
 
-            $this->dispatchBlankStatus(config('app_settings.values.nb_rodents'));
+            $this->dispatchBlankStatus(config('app_settings.values.nb_rodents'), $this->currentFlow['next_rodent_id']);
         }
 
-        Cache::put('rodents:' . Arr::get($this->currentFlow, 'rodent_id', null), $this->currentFlow, config('app_settings.values.max_rodents_scan_cycle'));
+        dump($this->validate($this->currentFlow));
 
-        Cache::put('rodent:id', Arr::get($this->currentFlow, 'rodent_id', null));
-        Cache::put('next:rodent:id', Arr::get($this->currentFlow, 'next_rodent_id', null));
-        Cache::put('rodent:time', Carbon::now());
+        if($this->validate($this->currentFlow)) {
+
+            Cache::put('rodents:' . Arr::get($this->currentFlow, 'rodent_id', null), $this->currentFlow, config('app_settings.values.max_rodents_scan_cycle'));
+
+            Cache::put('rodent:id', Arr::get($this->currentFlow, 'rodent_id', null));
+            Cache::put('next:rodent:id', Arr::get($this->currentFlow, 'next_rodent_id', null));
+            Cache::put('rodent:time', Carbon::now());
+
+        } else {
+      //      Log::error('Greska podataka dobijenih preko modbusa, Proveriti dump preko komande read:current_flow', (array) $this->currentFlow);
+            $this->info('Greska u dobijenim podacima preko modbusa');
+
+            $this->info('Current Flow:   ');
+            dd($this->currentFlow);
+        }
+
+
 
         NewCurrentFlow::dispatch($this->currentFlow);
     }
@@ -161,9 +177,10 @@ class ReadCurrentFlow extends Command
      * @param mixed $rodentToSkip
      * @return void
      */
-    private function dispatchBlankStatus(mixed $rodentToSkip): void
+    private function dispatchBlankStatus(mixed $rodentToSkip, int $nextRodent): void
     {
         $response = [
+            'next_rodent_id' => $nextRodent,
             'rodent_id' => $rodentToSkip,
             'current_flow' => 0,
             'status' => '00000000',
@@ -172,5 +189,14 @@ class ReadCurrentFlow extends Command
         Cache::put("rodents:$rodentToSkip", $response, config('app_settings.values.max_rodents_scan_cycle'));
 
         NewCurrentFlow::dispatch($response);
+    }
+
+    public function validate(array $currentFlow)
+    {
+        return is_integer(Arr::get($currentFlow, 'next_rodent_id', null))
+            && is_integer(Arr::get($currentFlow, 'rodent_id', null))
+            && is_numeric(Arr::get($currentFlow, 'current_flow', null)) && ! is_nan(Arr::get($currentFlow, 'current_flow', null))
+            && is_string(Arr::get($currentFlow, 'date_time', null))
+            && is_string(Arr::get($currentFlow, 'status', null));
     }
 }

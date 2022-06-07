@@ -27,7 +27,7 @@ class Kernel extends ConsoleKernel
     protected function shortSchedule(\Spatie\ShortSchedule\ShortSchedule $shortSchedule)
     {
         // this command will run every 30 seconds
-        $shortSchedule->command('read:current_flow')->everySeconds(15);
+        $shortSchedule->command('read:current_flow')->everySeconds(14);
     }
     /**
      * Register the commands for the application.

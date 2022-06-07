@@ -20,19 +20,21 @@
         </div>
     </div>
 @endif
-<form action="{{ route('rodent_type.upload.image', $model) }}" method="POST" enctype=multipart/form-data>
+@if(isset($model))
+    <form action="{{ route('rodent_type.upload.image', $model) }}" method="POST" enctype=multipart/form-data>
 
-    {{ csrf_field() }}
+        {{ csrf_field() }}
 
-    {{--   Upload Slika Proizvoda   --}}
-    @include('admin.partials.form_group', [
-        'required' => false,
-        'disableMultiple' => true,
-        'tagType' => 'upload',
-        'label' => 'Slika Bagera',
-        'tagName' => 'image',
-        'hint' => 'Odaberite sliku Bagera koja će biti prikazane na stranici za detalje bagera.',
-    ])
+        {{--   Upload Slika Proizvoda   --}}
+        @include('admin.partials.form_group', [
+            'required' => false,
+            'disableMultiple' => true,
+            'tagType' => 'upload',
+            'label' => 'Slika Bagera',
+            'tagName' => 'image',
+            'hint' => 'Odaberite sliku Bagera koja će biti prikazane na stranici za detalje bagera.',
+        ])
 
-    <button type="submit" class="btn btn-success">Pošalji sliku</button>
-</form>
+        <button type="submit" class="btn btn-success">Pošalji sliku</button>
+    </form>
+@endif
