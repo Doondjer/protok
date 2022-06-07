@@ -230,8 +230,8 @@ var modbusStatus = function modbusStatus() {
     Echo.channel('current_data').listen('NewCurrentFlow', function (_ref3) {
       var data = _ref3.data;
 
-      if (data.hasOwnProperty('is_maintenance')) {
-        console.log(data.is_maintenance);
+      if (data.hasOwnProperty('maintenance')) {
+        location.reload();
       }
 
       console.log(data);

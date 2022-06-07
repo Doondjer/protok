@@ -184,10 +184,13 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     fetch: function fetch(station, days) {
       _services_ApiService__WEBPACK_IMPORTED_MODULE_1__["default"].getStationData(station, days).then(this.refresh)["catch"](function (e) {
+        console.dir(e);
         sweetalert2__WEBPACK_IMPORTED_MODULE_2___default().fire(e.response.statusText, e.message, 'error');
       });
     },
     refresh: function refresh(_ref) {
+      var _this = this;
+
       var data = _ref.data;
       this.loading = false;
       this.series = [{
@@ -196,28 +199,31 @@ __webpack_require__.r(__webpack_exports__);
       }];
       console.log(data.series);
       this.barSeries = data.series;
-      this.$refs.chart.addXaxisAnnotation({
-        x: new Date(new Date().setDate(new Date().getDate() - 7)).getTime(),
-        offsetX: 10,
-        label: {
-          text: 'Početak Merenja',
-          offsetX: 30,
-          style: {
-            color: "#fff",
-            background: '#ffa600'
+      Vue.nextTick(function () {
+        _this.$refs.chart.addXaxisAnnotation({
+          x: new Date(new Date().setDate(new Date().getDate() - 7)).getTime(),
+          offsetX: 10,
+          label: {
+            text: 'Početak Merenja',
+            offsetX: 30,
+            style: {
+              color: "#fff",
+              background: '#ffa600'
+            }
           }
-        }
-      });
-      this.$refs.chart.addXaxisAnnotation({
-        x: new Date().getTime(),
-        label: {
-          text: 'Kraj Merenja',
-          borderColor: '#999',
-          style: {
-            color: "#fff",
-            background: '#cb2027'
+        });
+
+        _this.$refs.chart.addXaxisAnnotation({
+          x: new Date().getTime(),
+          label: {
+            text: 'Kraj Merenja',
+            borderColor: '#999',
+            style: {
+              color: "#fff",
+              background: '#cb2027'
+            }
           }
-        }
+        });
       });
     },
     updateData: function updateData() {
@@ -391,6 +397,7 @@ var datePicker = function datePicker() {
   methods: {
     fetch: function fetch() {
       _services_ApiService__WEBPACK_IMPORTED_MODULE_0__["default"].getStationTableData(this.form).then(this.refresh)["catch"](function (e) {
+        console.dir(e);
         sweetalert2__WEBPACK_IMPORTED_MODULE_1___default().fire(e.response.statusText, e.message, 'error');
       });
     },

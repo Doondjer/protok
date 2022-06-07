@@ -170,6 +170,7 @@ export default {
             apiService.getStationData(station, days)
                 .then(this.refresh)
                 .catch(e => {
+                    console.dir(e);
                     Swal.fire(e.response.statusText, e.message, 'error');
                 });
 
@@ -186,29 +187,30 @@ export default {
             ];
 console.log(data.series);
             this.barSeries = data.series;
-
-            this.$refs.chart.addXaxisAnnotation({
-                x: new Date(new Date().setDate(new Date().getDate()-7)).getTime(),
-                offsetX: 10,
-                label: {
-                    text: 'Početak Merenja',
-                    offsetX: 30,
-                    style: {
-                        color: "#fff",
-                        background: '#ffa600'
-                    }
-                },
-            })
-            this.$refs.chart.addXaxisAnnotation({
-                x: new Date().getTime(),
-                label: {
-                    text: 'Kraj Merenja',
-                    borderColor: '#999',
-                    style: {
-                        color: "#fff",
-                        background: '#cb2027'
-                    }
-                },
+            Vue.nextTick(() => {
+                this.$refs.chart.addXaxisAnnotation({
+                    x: new Date(new Date().setDate(new Date().getDate()-7)).getTime(),
+                    offsetX: 10,
+                    label: {
+                        text: 'Početak Merenja',
+                        offsetX: 30,
+                        style: {
+                            color: "#fff",
+                            background: '#ffa600'
+                        }
+                    },
+                })
+                this.$refs.chart.addXaxisAnnotation({
+                    x: new Date().getTime(),
+                    label: {
+                        text: 'Kraj Merenja',
+                        borderColor: '#999',
+                        style: {
+                            color: "#fff",
+                            background: '#cb2027'
+                        }
+                    },
+                })
             })
         },
         updateData() {

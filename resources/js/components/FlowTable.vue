@@ -140,6 +140,7 @@ export default {
             apiService.getStationTableData(this.form)
                 .then(this.refresh)
                 .catch(e => {
+                    console.dir(e);
                     Swal.fire(e.response.statusText, e.message, 'error');
                 });
         },
