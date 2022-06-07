@@ -168,8 +168,6 @@ class ReadCurrentFlow extends Command
             dd($this->currentFlow);
         }
 
-
-
         NewCurrentFlow::dispatch($this->currentFlow);
     }
 

@@ -178,11 +178,17 @@ export default {
         Echo.channel('current_data')
             .listen('NewCurrentFlow', ({data}) => {
 
+                if(data.hasOwnProperty('maintenance')) {
+                    location.reload();
+                }
+
+                console.log(data);
+
                 if(data.hasOwnProperty('status')) {
                     Vue.set(this.currentFlows, data.rodent_id, data.current_flow);
 
                     this.next_rodent = data.next_rodent_id;
-console.log(data);
+
                     if (data.status){
                         Vue.set(this.statuses, data.rodent_id, data.status.split('').map(status => {
                             return status === '1';

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NewCurrentFlow;
 use App\Exports\FlowExport;
 use App\Http\Requests\ExportRequest;
 use App\Models\Flow;
@@ -36,6 +37,8 @@ class AdminsController extends Controller
             'secret' => $secret,
             'maintenance_started' => Carbon::now()
         ]);
+
+        NewCurrentFlow::dispatch(['maintenance' => true]);
 
         return redirect("/$secret");
     }

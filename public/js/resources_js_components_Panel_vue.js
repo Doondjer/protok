@@ -230,10 +230,15 @@ var modbusStatus = function modbusStatus() {
     Echo.channel('current_data').listen('NewCurrentFlow', function (_ref3) {
       var data = _ref3.data;
 
+      if (data.hasOwnProperty('is_maintenance')) {
+        console.log(data.is_maintenance);
+      }
+
+      console.log(data);
+
       if (data.hasOwnProperty('status')) {
         vue__WEBPACK_IMPORTED_MODULE_2__["default"].set(_this2.currentFlows, data.rodent_id, data.current_flow);
         _this2.next_rodent = data.next_rodent_id;
-        console.log(data);
 
         if (data.status) {
           vue__WEBPACK_IMPORTED_MODULE_2__["default"].set(_this2.statuses, data.rodent_id, data.status.split('').map(function (status) {
