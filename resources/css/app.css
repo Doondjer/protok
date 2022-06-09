@@ -74,6 +74,9 @@ body.fullscreen .panel-header {
 .theme-dark .apexcharts-menu {
     background-color: #1e293b;
 }
+.theme-dark .apexcharts-theme-light .apexcharts-menu-item:hover {
+    color: #626976;
+}
 @media (max-height: 1024px) and (min-width: 400px) {
 
     body.fullscreen .panel-header {

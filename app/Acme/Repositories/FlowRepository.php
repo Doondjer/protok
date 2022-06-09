@@ -15,11 +15,15 @@ class FlowRepository
      */
     public function getSevenDayFlowBarData(int $stationId)
     {
+        $time = Carbon::create('2019-08-25');
+
         $bars = Flow::where('StationId', $stationId)
             ->select(DB::raw('StationId, ROUND(sum(ValueVrednost) * 900, 1) as flow, FORMAT(CAST( Datum_date AS Date ), \'d MMM\') date, Smena as shift'))
             ->orderBy('Datum_date','desc')
             ->groupBy('StationId', 'Datum_date', 'Smena')
-            ->whereDate('Datum_date', '>=', Carbon::today()->subDays(7)->toDate())
+         //   ->whereDate('Datum_date', '>=', Carbon::today()->subDays(7)->toDate())
+            ->whereDate('Datum_date', '>=', $time->subDays(7)->toDate())
+          //  ->whereDate('Datum_date', '<', $time->toDate())
             ->get()
             ->groupBy(['date', 'shift']);
 
@@ -110,11 +114,14 @@ class FlowRepository
      */
     protected function createShiftSeries($bars): array
     {
-        $firstShift     = [ 'name' => 'I Smena',   'data' => []];
-        $secondShift    = [ 'name' => 'II Smena',  'data' => []];
-        $thirdShift     = [ 'name' => 'III Smena', 'data' => []];
+        $firstShift     = [ 'name' => 'I Smena',  'type' => 'bar',  'data' => []];
+        $secondShift    = [ 'name' => 'II Smena',  'type' => 'bar', 'data' => []];
+        $thirdShift     = [ 'name' => 'III Smena', 'type' => 'bar', 'data' => []];
+        $totalFlow      = [ 'name' => 'Ukupno Iskopano', 'type' => 'line', 'data' => []];
 
         foreach ($bars as $date => $items) {
+
+            $total = 0;
 
             if (!$items->has(1)) {
                 $firstShift['data'][] = ['x' => $date, 'y' => 0];
@@ -136,10 +143,14 @@ class FlowRepository
                 if (isset($item[0]) && $item[0]->shift == 3) {
                     $thirdShift['data'][] = ['x' => $date, 'y' => $item[0]->flow];
                 }
+                $total += $item[0]->flow;
             }
+
+            $totalFlow['data'][] = ['x' => $date, 'y' => $total];
+
 
         }
 
-        return [$firstShift, $secondShift, $thirdShift];
+        return [$firstShift, $secondShift, $thirdShift, $totalFlow];
     }
 }

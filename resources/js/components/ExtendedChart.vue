@@ -79,29 +79,85 @@ export default {
                     bar: {
                         horizontal: false,
                         columnWidth: '55%',
-                        endingShape: 'rounded'
+                        endingShape: 'rounded',
+                        borderRadius: 5,
+                        dataLabels: {
+                            position: 'top', // bottom/center/top,
+                        }
                     },
                 },
                 dataLabels: {
-                    enabled: false,
+                    enabled: true,
+                    enabledOnSeries: [3],
+                    offsetY: -20, // play with this value
+                    style: {
+                        fontSize: '12px',
+                        colors: ["#304758"]
+                    },
+                    background: {
+                        enabled: true,
+                        foreColor: '#fff',
+                        padding: 6,
+                        borderRadius: 2,
+                        borderWidth: 1,
+                        opacity: 0.3,
+                        shadow: true,
+                        dropShadow: {
+                            enabled: true,
+                            top: 1,
+                            left: 1,
+                            blur: 1,
+                            color: '#fff',
+                            opacity: 0.45
+                        }
+                    },
+                    formatter: function (value) {
+                        return `${value.toFixed(1)} m3`;
+                    }
                 },
                 stroke: {
                     show: true,
-                    width: 2,
-                    colors: ['transparent']
+                  //  width: 2,
+                      width: [2, 2,2,3],
+                    curve: 'smooth',
+                    colors: ['transparent','transparent','transparent','#cb2027']
+                },
+                yaxis: {
+                    title: {
+                        text: 'Iskopano u m3',
+                    },
+                    labels: {
+                        formatter: function (value) {
+                            return value.toFixed(0);
+                        }
+                    }
                 },
                 fill: {
                     opacity: 1
                 },
                 tooltip: {
+
+                    shared: true,
+                    intersect: false,
                     y: {
                         formatter: function (val) {
-                            return val + " m3";
+                            return val.toFixed(1) + " m3";
                         },
                     }
                 },
                 title: {
                     text: this.graph_title,
+                },
+                legend: {
+                    show: true,
+                    /*  markers: {
+                          width: 40,
+                          height: 10,
+                          radius: 2,
+                      },
+                   /* position: 'right',
+                      offsetY: 0,
+                      height: 230,*/
                 },
             },
             chartOptions: {
