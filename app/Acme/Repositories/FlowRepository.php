@@ -22,8 +22,9 @@ class FlowRepository
             ->orderBy('Datum_date','desc')
             ->groupBy('StationId', 'Datum_date', 'Smena')
          //   ->whereDate('Datum_date', '>=', Carbon::today()->subDays(7)->toDate())
-            ->whereDate('Datum_date', '>=', $time->subDays(7)->toDate())
+         //   ->whereDate('Datum_date', '>=', $time->subDays(7)->toDate())
           //  ->whereDate('Datum_date', '<', $time->toDate())
+            ->whereRaw("CAST(Datum_date as datetime) >= '" . Carbon::now()->subDays(15) . "'")
             ->get()
             ->groupBy(['date', 'shift']);
 
