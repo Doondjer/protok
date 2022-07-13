@@ -7,6 +7,7 @@
     "require": {
         "php": "^8.0.2",
         "aldas/modbus-tcp-client": "^3.0",
+        "babenkoivan/telegram-notifications": "^1.1",
         "beyondcode/laravel-websockets": "^1.13",
         "guzzlehttp/guzzle": "^7.2",
         "intervention/image": "^2.7",

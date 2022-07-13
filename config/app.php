@@ -182,6 +182,7 @@ return [
 
         App\Providers\FortifyServiceProvider::class,
         \App\Providers\ViewComposerServiceProvider::class,
+        TelegramNotifications\TelegramServiceProvider::class,
     ],
 
     /*

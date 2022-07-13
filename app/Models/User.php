@@ -11,7 +11,12 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
+    use HasApiTokens, HasFactory, Notifiable, SoftDeletes, Notifiable;
+
+    public function routeNotificationForTelegram()
+    {
+        return '-1001738339759';
+    }
 
     /**
      * The attributes that are mass assignable.
