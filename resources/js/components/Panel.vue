@@ -204,6 +204,10 @@ export default {
 
         Echo.join('online');
 
+        // Refresh page every 24h
+        setInterval(function(){
+            window.location.reload();
+        },86400000);
    },
 }
 </script>
