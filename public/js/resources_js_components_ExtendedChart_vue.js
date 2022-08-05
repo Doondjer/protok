@@ -206,7 +206,10 @@ __webpack_require__.r(__webpack_exports__);
           type: 'datetime',
           min: new Date(new Date().setDate(new Date().getDate() - 1)).getTime(),
           max: new Date().getTime(),
-          tickAmount: 6
+          tickAmount: 6,
+          labels: {
+            datetimeUTC: false
+          }
         },
         tooltip: {
           x: {
